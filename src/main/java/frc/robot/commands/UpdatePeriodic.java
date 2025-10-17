@@ -13,7 +13,6 @@ public class UpdatePeriodic {
      * Gets the value from the controllers and updates it in the code
      */
     public static void updateControllerInputs() {
-
         // if any of these are below the deadzone, it equals zero. abs so the controller
         // can go negative
         if (Math.abs(frc.robot.Robot.controller_1.getLeftY()) >= RobotConstants.deadzone) {
@@ -46,7 +45,7 @@ public class UpdatePeriodic {
         RobotConstants.bButton = frc.robot.Robot.controller_1.getBButton();
         RobotConstants.xButton = frc.robot.Robot.controller_1.getXButton();
         RobotConstants.aButton = frc.robot.Robot.controller_1.getAButton();
-        RobotConstants.beamSensor = frc.robot.Robot.beamBreak.get();
+
 
     }
 
