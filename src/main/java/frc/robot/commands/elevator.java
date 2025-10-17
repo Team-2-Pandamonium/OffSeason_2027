@@ -11,9 +11,7 @@ import frc.robot.constants.RobotConstants;
  * - maybe see abut checking for voltage spike on neo vortexes for bottom 0/top 0
  * other
  * - pid loop for elevator bc we actaully have ecoders :)
- * - calculate how much elevator needs to move from current position
- * - convert between rotations and linear amount (may not be possible to calculate easily due to vectors with belts ;-;)
- * - make buttons go to specific levels and stuff
+ * - make buttons have mapping so they can go to specific levels and stuff
  */
 public class elevator {
 
@@ -67,6 +65,8 @@ public class elevator {
     return rotations;
     // need rps (rotation per second) at max cause number of rotations needed
     // converted to seconds needed, then jst a wait statement
+    // btw 1 rotation is 20 mm but maybe innacurate due to vectors with belts (jst
+    // multiplied the number of teeth by the dist between them) ;-;
   }
 
 }
