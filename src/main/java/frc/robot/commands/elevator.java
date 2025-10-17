@@ -2,6 +2,19 @@ package frc.robot.commands;
 
 import frc.robot.constants.RobotConstants;
 
+/*
+ * TODO:
+ * sensors we will have
+ * - encoder on belts
+ * - 3-4 magnetic limit switches on elevator
+ * - CANrange dist sensor
+ * - maybe see abut checking for voltage spike on neo vortexes for bottom 0/top 0
+ * other
+ * - pid loop for elevator bc we actaully have ecoders :)
+ * - calculate how much elevator needs to move from current position
+ * - convert between rotations and linear amount (may not be possible to calculate easily due to vectors with belts ;-;)
+ * - make buttons go to specific levels and stuff
+ */
 public class elevator {
 
   /**
@@ -49,7 +62,7 @@ public class elevator {
   }
 
   public static double inchesToRotations(int inches) {
-    double rotations = 0;
+    double rotations;
     rotations = (inches * 25.4) / 20;
     return rotations;
     // need rps (rotation per second) at max cause number of rotations needed
