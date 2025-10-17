@@ -46,7 +46,10 @@ public class UpdatePeriodic {
         RobotConstants.xButton = frc.robot.Robot.controller_1.getXButton();
         RobotConstants.aButton = frc.robot.Robot.controller_1.getAButton();
 
-
     }
 
+    public static void updateSensorValues() {
+        RobotConstants.encoderPos = frc.robot.Robot.encoder.getDistance();
+        RobotConstants.encoderRat = frc.robot.Robot.encoder.getRate();
+    }
 }

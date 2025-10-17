@@ -1,7 +1,5 @@
-//Neel said that if the code is unsadisfactory, we can always revert it
 package frc.robot;
 
-import frc.robot.commands.MotorOutputs;
 import frc.robot.commands.UpdatePeriodic;
 import frc.robot.commands.elevator;
 import frc.robot.constants.RobotConstants;
@@ -20,6 +18,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators.None;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SensorUtil;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -73,16 +72,16 @@ public class Robot extends TimedRobot {
 
   // defining the motors and channels (please change the channels when electrical
   // is finished)
-  private final PWMSparkMax intake = new PWMSparkMax(5); // intake (obviously there will be more motors)
-  private final PWMSparkMax elevator1 = new PWMSparkMax(6);
-  private final PWMSparkMax elevator2 = new PWMSparkMax(2); // elevator
-  private final PWMSparkMax right1 = new PWMSparkMax(4);
-  private final PWMSparkMax right2 = new PWMSparkMax(1);
-  private final PWMSparkMax left1 = new PWMSparkMax(3);
-  private final PWMSparkMax left2 = new PWMSparkMax(0);
-
-  public static DigitalInput beamBreak = new DigitalInput(0);
-  public static XboxController controller_1 = new XboxController(0);
+  public static final PWMSparkMax intakeShort = new PWMSparkMax(0); // intake (obviously there will be more motors)
+  public static final PWMSparkMax intakeLong = new PWMSparkMax(1); // intake (obviously there will be more motors)
+  public static final PWMSparkMax elevatorR = new PWMSparkMax(2);
+  public static final PWMSparkMax elevatorL = new PWMSparkMax(3); // elevator
+  public static final PWMSparkMax right1 = new PWMSparkMax(4);
+  public static final PWMSparkMax right2 = new PWMSparkMax(5);
+  public static final PWMSparkMax left1 = new PWMSparkMax(6);
+  public static final PWMSparkMax left2 = new PWMSparkMax(7);
+  public static final Encoder encoder = new Encoder(0, 1);
+  public static final XboxController controller_1 = new XboxController(0);
 
   private Timer autonTimer = new Timer();
   // private Timer intakeTimer = new Timer();
@@ -109,34 +108,20 @@ public class Robot extends TimedRobot {
     // inverting one motor per gearbox to keep directionality
     right1.setInverted(true);
     right2.setInverted(true);
-    intake.setInverted(true);
-    elevator1.setInverted(true);
-    elevator2.setInverted(true);
+    elevatorR.setInverted(true);
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
   @Override
   public void autonomousInit() {
-    // starting and reseting the timer used in auton
-    this.autonTimer.start();
-    this.autonTimer.reset();
+    // // starting and reseting the timer used in auton
+    // this.autonTimer.start();
+    // this.autonTimer.reset();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // auton code
-    if (this.autonTimer.get() < 1) {
-      // timer less than 1
-    } else if (this.autonTimer.get() < 1.5) {
-      // time less than 1.5 and bigger than 1
-    } else if (this.autonTimer.get() < 2.5) {
-      // time less than 2.5 and bigger than 1.5
-    } else if (this.autonTimer.get() < 3.75) {
-      // time less than 3.75 and bigger than 2.5
-    } else {
-      // after 3.75
-    }
   }
 
   /**
@@ -151,42 +136,49 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during teleoperated mode. */
   @Override
   public void teleopPeriodic() {
+    UpdatePeriodic.updateControllerInputs();
+    System.out.println(encoder.getDistance() + " dist");
+    System.out.println(encoder.getRate() + " rate");
+
     // 0.6 is the speed multiplier for normal driving
-    double drivetrain_left_speed = -RobotConstants.leftStick;
-    double drivetrain_right_speed = -RobotConstants.rightStick;
+    // double drivetrain_left_speed = -RobotConstants.leftStick;
+    // double drivetrain_right_speed = -RobotConstants.rightStick;
     // double
     // drivetrain_max_left_speed=-1.2*(RobotConstants.leftStick*RobotConstants.leftStick);
     // double
     // drivetrain_max_right_speed=-1.2*(RobotConstants.rightStick*RobotConstants.rightStick);
     // y is up elevator
     if (controller_1.getYButton()) {
-      elevator1.set(elevator_speed);
-      elevator2.set(-elevator_speed);
+      elevatorR.set(RobotConstants.elevator_speed);
+      elevatorL.set(-RobotConstants.elevator_speed);
     } else if (RobotConstants.aButton) {
       // a is down elevator
-      elevator1.set(-elevator_speed);
-      elevator2.set(elevator_speed);
+      elevatorR.set(-RobotConstants.elevator_speed);
+      elevatorL.set(RobotConstants.elevator_speed);
     } else {
-      elevator1.set(0);
-      elevator2.set(0);
+      elevatorR.set(0);
+      elevatorL.set(0);
     }
 
     // b is intake
     if (RobotConstants.bButton) {
-      intake.set(intake_speed);
+      intakeShort.set(RobotConstants.intake_speed);
+      intakeLong.set(-RobotConstants.intake_speed);
     } else if (RobotConstants.xButton) {
       // x is outake
-      intake.set(-intake_speed);
+      intakeShort.set(-RobotConstants.intake_speed);
+      intakeLong.set(RobotConstants.intake_speed);
     } else {
-      intake.set(0);
+      intakeShort.set(0);
+      intakeLong.set(0);
     }
 
     // if (RobotConstants.rightTrigger>0.75) {
     // if not rt pressed, go at normal speed
-    left1.set(-drivetrain_left_speed);
-    left2.set(drivetrain_left_speed);
-    right1.set(-drivetrain_right_speed);
-    right2.set(drivetrain_right_speed);
+    left1.set(-RobotConstants.leftStick);
+    left2.set(-RobotConstants.leftStick);
+    right1.set(-RobotConstants.rightStick);
+    right2.set(-RobotConstants.rightStick);
     // }
 
     /*
@@ -231,8 +223,5 @@ public class Robot extends TimedRobot {
     // left2.set(-0.5 * 0.95);
 
   }
-
-  double elevator_speed = 0.5;
-  double intake_speed = 0.5;
 
 }

@@ -23,18 +23,27 @@ public class RobotConstants {
     public static boolean cruiseControl = false; // fasle=off true=on
 
     // elevator (all values in inches)
+    public static final double elevator_speed = 0.5;
+    public static final double intake_speed = 0.5;
     public static double elevatorHeight;
-    public static final double Level1=24;
-    public static final double Level2=24+17;
-    public static final double Level3=24+17*2;
-    public static final double humanPlayer=35;
-
-
+    public static final double Level1 = 24;
+    public static final double Level2 = 24 + 17;
+    public static final double Level3 = 24 + 17 * 2;
+    public static final double humanPlayer = 35;
+    public static double encoderPos;
+    public static double encoderRat;
     // manipulaor
 
     // inputs
     public static double rightTrigger;
-    public static double leftStick;{if (Math.abs(leftStick) <= .05) {leftStick=0;} else{leftStick=leftStick;}}
+    public static double leftStick;
+    {
+        if (Math.abs(leftStick) <= .05) {
+            leftStick = 0;
+        } else {
+            leftStick = leftStick;
+        }
+    }
     public static double rightStick;
     public static Boolean leftBumper;
     public static Boolean rightBumper;
@@ -42,7 +51,5 @@ public class RobotConstants {
     public static boolean bButton;
     public static boolean xButton;
     public static boolean aButton;
-
-
 
 }
