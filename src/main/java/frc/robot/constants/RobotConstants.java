@@ -13,12 +13,6 @@ public class RobotConstants {
     public static final double deadzone = .05;
 
     // driving
-    public static final double robotSpeedSave = 1;
-    public static final double accelerationRate = .2;
-    public static double leftOutput = 0;
-    public static double rightOutput = 0;
-    public static double leftTarget = 0;
-    public static double rightTarget = 0;
     public static double robotSpeed = 0.5;
     public static boolean cruiseControl = false; // fasle=off true=on
 
@@ -32,6 +26,9 @@ public class RobotConstants {
     public static final double humanPlayer = 35;
     public static double encoderPos;
     public static double encoderRat;
+    public static boolean carrigeTop;
+    public static boolean stg2Top;
+    public static boolean carrigeBot;
     // manipulaor
 
     // inputs

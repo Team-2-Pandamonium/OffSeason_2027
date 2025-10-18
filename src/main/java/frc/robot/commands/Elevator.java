@@ -6,8 +6,7 @@ import frc.robot.constants.RobotConstants;
  * TODO:
  * sensors we will have
  * - encoder on belts
- * - 3-4 magnetic limit switches on elevator (how would these function?)
- * - CANrange dist sensor (for what?)
+ * - CANrange dist sensor (why look down)
  * - maybe see abut checking for voltage spike on neo vortexes for bottom 0/top 0
  * other
  * - pid loop for elevator bc we actaully have ecoders :)
@@ -57,6 +56,21 @@ public class Elevator {
     }
     double movDist = desLevel - RobotConstants.elevatorHeight;
     return movDist;
+  }
+
+  /**
+   * top = 1
+   * bottom = 0
+   * default with no exact pos = -1
+   */
+  public static int limSwitchPos() {
+    if (RobotConstants.carrigeBot) {
+      return 0;
+    } else if (RobotConstants.stg2Top && RobotConstants.carrigeTop) {
+      return 1;
+    } else {
+      return -1;
+    }
   }
 
   public static double inchesToRotations(int inches) {

@@ -71,24 +71,18 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
  */
 public class Robot extends TimedRobot {
 
-  //motors
-  public static final PWMSparkMax intakeShort = new PWMSparkMax(0);
-  public static final PWMSparkMax intakeLong = new PWMSparkMax(1); 
+  // defining the motors and channels (please change the channels when electrical
+  // is finished)
+  public static final PWMSparkMax intakeShort = new PWMSparkMax(0); // intake (obviously there will be more motors)
+  public static final PWMSparkMax intakeLong = new PWMSparkMax(1); // intake (obviously there will be more motors)
   public static final PWMSparkMax elevatorR = new PWMSparkMax(2);
   public static final PWMSparkMax elevatorL = new PWMSparkMax(3);
   public static final PWMSparkMax right1 = new PWMSparkMax(4);
   public static final PWMSparkMax right2 = new PWMSparkMax(5);
   public static final PWMSparkMax left1 = new PWMSparkMax(6);
   public static final PWMSparkMax left2 = new PWMSparkMax(7);
-  //sensors
   public static final Encoder encoder = new Encoder(0, 1);
-  public static final CANrange elevatorHeight = new CANrange(0);
-  public static final DigitalInput stg2Top = new DigitalInput(0);
-  public static final DigitalInput CarrigeTop = new DigitalInput(1);
-  public static final DigitalInput CarrigeBottom = new DigitalInput(2);
-  //controllers
-  public static final XboxController DRIV_CONTROLLER = new XboxController(0);
-  public static final XboxController OPPERA_CONTROLLER = new XboxController(1);
+  public static final XboxController controller_1 = new XboxController(0);
 
   private Timer autonTimer = new Timer();
   // private Timer intakeTimer = new Timer();
