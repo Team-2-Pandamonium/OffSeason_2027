@@ -1,7 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.UpdatePeriodic;
-import frc.robot.commands.elevator;
+import frc.robot.commands.Elevator;
 import frc.robot.constants.RobotConstants;
 
 import java.lang.reflect.GenericDeclaration;
@@ -137,8 +137,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     UpdatePeriodic.updateControllerInputs();
-    System.out.println(encoder.getDistance() + " dist");
-    System.out.println(encoder.getRate() + " rate");
 
     // 0.6 is the speed multiplier for normal driving
     // double drivetrain_left_speed = -RobotConstants.leftStick;

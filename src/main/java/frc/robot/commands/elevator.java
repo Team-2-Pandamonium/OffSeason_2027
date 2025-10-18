@@ -13,7 +13,7 @@ import frc.robot.constants.RobotConstants;
  * - pid loop for elevator bc we actaully have ecoders :)
  * - make buttons have mapping so they can go to specific levels and stuff
  */
-public class elevator {
+public class Elevator {
 
   /**
    * This calculates how much the elevator has to move to get to the desired level
