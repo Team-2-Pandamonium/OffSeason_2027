@@ -37,13 +37,6 @@ public class RobotConstants {
     // inputs
     public static double rightTrigger;
     public static double leftStick;
-    {
-        if (Math.abs(leftStick) <= .05) {
-            leftStick = 0;
-        } else {
-            leftStick = leftStick;
-        }
-    }
     public static double rightStick;
     public static Boolean leftBumper;
     public static Boolean rightBumper;
