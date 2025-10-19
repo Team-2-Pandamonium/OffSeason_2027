@@ -5,7 +5,7 @@ import frc.robot.constants.RobotConstants;
 /*
  * TODO:
  * sensors we will have
- * - encoder on belts
+ * - encoder on belts (maybe)
  * - CANrange dist sensor (why look down)
  * - maybe see abut checking for voltage spike on neo vortexes for bottom 0/top 0
  * other
