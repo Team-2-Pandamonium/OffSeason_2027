@@ -84,5 +84,8 @@ public class UpdatePeriodic {
     public static void updateSensorValues() {
         RobotConstants.encoderPos = frc.robot.Robot.encoder.getDistance();
         RobotConstants.encoderRat = frc.robot.Robot.encoder.getRate();
+        RobotConstants.carrigeBot=frc.robot.Robot.CarrigeBottom.get();
+        RobotConstants.carrigeTop=frc.robot.Robot.CarrigeTop.get();
+        RobotConstants.stg2Top=frc.robot.Robot.stg2Top.get();
     }
 }
