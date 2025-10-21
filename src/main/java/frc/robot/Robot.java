@@ -88,9 +88,11 @@ public class Robot extends TimedRobot {
   public static final SparkMax right2 = new SparkMax(12, MotorType.kBrushless);
   public static final SparkMax left1 = new SparkMax(13, MotorType.kBrushless);
   public static final SparkMax left2 = new SparkMax(14, MotorType.kBrushless);
+ 
   //sensors
-  public static final Encoder encoder = new Encoder(4, 5);
-  public static final CANrange elevatorHeight = new CANrange(3);
+  public static final Encoder elevatorEncR = new Encoder(0, 1);
+  public static final Encoder elevatorEncL = new Encoder(2, 3);
+  // public static final CANrange elevatorHeight = new CANrange(3);
   public static final DigitalInput stg2Top = new DigitalInput(0);
   public static final DigitalInput CarrigeTop = new DigitalInput(1);
   public static final DigitalInput CarrigeBottom = new DigitalInput(2);
@@ -100,10 +102,8 @@ public class Robot extends TimedRobot {
   public static final XboxController DRIV_CONTROLLER = new XboxController(0);
   public static final XboxController OPPERA_CONTROLLER = new XboxController(1);
 
-  private Timer autonTimer = new Timer();
-  // private Timer intakeTimer = new Timer();
-  // private Timer robotStartTimer = new Timer();
 
+  // shuffleboard
   public ShuffleboardTab newTabKevin = Shuffleboard.getTab("KevinTabV2");
   public GenericEntry cameraRequirement = newTabKevin.add("Camera Requirements", 0).getEntry();
 
@@ -115,27 +115,31 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    // SparkMaxConfig config = new SparkMaxConfig();
-    // config.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
-    // SparkMaxConfig followerConfig = new SparkMaxConfig();
-    // followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false);
+    SparkMaxConfig config = new SparkMaxConfig();
+    config.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
+    SparkMaxConfig followerConfig = new SparkMaxConfig();
+    followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false);
 
-    // right1.configure(config, null, null);
-    // followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1);
-    // right2.configure(followerConfig, null, null);
+    config.inverted(true);
 
-    // config.inverted(true);
-    // left1.configure(config, null, null);
-    // followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1);
-    // left2.configure(followerConfig, null, null);
+    right1.configure(config, null, null);
+    followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(right1);
+    right2.configure(followerConfig, null, null);
 
-    // config.inverted(false);
-    // elevatorR.configure(config, null, null);
-    // followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(elevatorR, true);
-    // elevatorL.configure(followerConfig, null, null);
+    config.inverted(false);
+    left1.configure(config, null, null);
+    followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(left1);
+    left2.configure(followerConfig, null, null);
 
-    // manLong.configure(config, null, null);
-    // manShort.configure(config, null, null);
+    config.inverted(true);
+    elevatorR.configure(config, null, null);
+    followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(elevatorR, true);
+    elevatorL.configure(followerConfig, null, null);
+
+    config.inverted(false);
+    manLong.configure(config, null, null);
+    followerConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(manLong, true);
+    manShort.configure(followerConfig, null, null);
 
   }
 
@@ -157,7 +161,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopInit() {
-    // this.intakeTimer.start();
+    System.out.println("WARNING: RESETING ELEVATOR 0");
+    Elevator.reset0();
 
   }
 
@@ -165,15 +170,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     UpdatePeriodic.updateControllerInputs();
-
-    // 0.6 is the speed multiplier for normal driving
-    // double drivetrain_left_speed = -RobotConstants.leftStick;
-    // double drivetrain_right_speed = -RobotConstants.rightStick;
-    // double
-    // drivetrain_max_left_speed=-1.2*(RobotConstants.leftStick*RobotConstants.leftStick);
-    // double
-    // drivetrain_max_right_speed=-1.2*(RobotConstants.rightStick*RobotConstants.rightStick);
-    // y is up elevator
+    UpdatePeriodic.updateSensorValues();
 
     // if (RobotConstants.DrivyButton) {
     // elevatorR.set(RobotConstants.elevator_speed);
@@ -222,12 +219,9 @@ public class Robot extends TimedRobot {
     // }
 
 
-    left1.set(-RobotConstants.DrivleftStick * RobotConstants.robotMaxSpeed);
+    left1.set(RobotConstants.DrivleftStick * RobotConstants.robotMaxSpeed);
     right1.set(RobotConstants.DrivrightStick * RobotConstants.robotMaxSpeed);
-    left2.set(-RobotConstants.DrivleftStick * RobotConstants.robotMaxSpeed);
-    right2.set(RobotConstants.DrivrightStick * RobotConstants.robotMaxSpeed);
-    elevatorL.set(RobotConstants.OpperaleftStick*RobotConstants.elevatorMaxSpeed);
-    elevatorR.set(-RobotConstants.OpperaleftStick*RobotConstants.elevatorMaxSpeed);
+    elevatorR.set(RobotConstants.OpperaleftStick * RobotConstants.elevatorMaxSpeed);
 
   }
 

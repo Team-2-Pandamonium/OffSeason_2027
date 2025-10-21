@@ -14,6 +14,10 @@ public class RobotConstants {
 
     // driving
     public static final double robotMaxSpeed = 1;
+    public static double right1Enc;
+    public static double right2Enc;
+    public static double left1Enc;
+    public static double left2Enc;
 
     // elevator (all values in inches)
     public static final double elevatorMaxSpeed = 1;
@@ -23,8 +27,8 @@ public class RobotConstants {
     public static final double Level2 = 24 + 17;
     public static final double Level3 = 24 + 17 * 2;
     public static final double humanPlayer = 35;
-    public static double encoderPos;
-    public static double encoderRat;
+    public static double encoderPosL;
+    public static double encoderPosR;
     public static boolean carrigeTop;
     public static boolean stg2Top;
     public static boolean carrigeBot;
@@ -41,7 +45,7 @@ public class RobotConstants {
     public static boolean DrivxButton;
     public static boolean DrivaButton;
     public static boolean DrivyButton;
-    // operator
+    // inputs, operator
     public static double OpperarightTrigger;
     public static double OpperaleftStick;
     public static double OpperarightStick;

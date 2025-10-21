@@ -2,6 +2,11 @@ package frc.robot.commands;
 
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
+
+import java.lang.reflect.Type;
+
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -82,8 +87,8 @@ public class UpdatePeriodic {
     }
 
     public static void updateSensorValues() {
-        RobotConstants.encoderPos = frc.robot.Robot.encoder.getDistance();
-        RobotConstants.encoderRat = frc.robot.Robot.encoder.getRate();
+        RobotConstants.encoderPosL = frc.robot.Robot.elevatorEncL.getDistance();
+        RobotConstants.encoderPosR = frc.robot.Robot.elevatorEncR.getDistance();
         RobotConstants.carrigeBot=frc.robot.Robot.CarrigeBottom.get();
         RobotConstants.carrigeTop=frc.robot.Robot.CarrigeTop.get();
         RobotConstants.stg2Top=frc.robot.Robot.stg2Top.get();

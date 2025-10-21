@@ -1,5 +1,11 @@
 package frc.robot.commands;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 
@@ -86,16 +92,32 @@ public class Elevator {
 
   public static void reset0(){
     //go down until we see the voltage of motors spike and then we know its at the bottom
-    double volt=0;
-    double prevVolt=0;
-    final double voltThreshold=3;
-    while (!(Math.abs(volt-prevVolt)>voltThreshold)) {
-      Robot.elevatorL.set(-0.75);
-      Robot.elevatorR.set(-0.75);
+    double CurrentL = Robot.elevatorL.getOutputCurrent();
+    double prevCurrentL = Robot.elevatorL.getOutputCurrent();
+    double CurrentR = Robot.elevatorR.getOutputCurrent();
+    double prevCurrentR = Robot.elevatorR.getOutputCurrent();
+    final double currentThreshold = 3;
+    while (((!(Math.abs(CurrentR - prevCurrentR) > currentThreshold))
+        || (!(Math.abs(CurrentL - prevCurrentL) > currentThreshold))) ||
+        Robot.DRIV_CONTROLLER.getLeftStickButton(/* emergancy stop */)) {
+
+      Robot.elevatorR.set(-1);
+      prevCurrentL = CurrentL;
+      prevCurrentR = CurrentR;
+      CurrentL = Robot.elevatorL.getOutputCurrent();
+      CurrentR = Robot.elevatorR.getOutputCurrent();
+
+      System.out.println(prevCurrentL + " prevCurrL");
+      System.out.println(prevCurrentR + " prevCurrR");
+      System.out.println(CurrentL + " CurrL");
+      System.out.println(CurrentR + " CurrR");
+
     }
+
     Robot.elevatorL.set(0);
     Robot.elevatorR.set(0);
-    Robot.encoder.reset();
-    
+    Robot.elevatorEncL.reset();
+    Robot.elevatorEncR.reset();
   }
+
 }
