@@ -139,8 +139,7 @@ public class UpdatePeriodic {
     }
 
     public static void updateSensorValues() {
-        RobotConstants.encoderPosL = frc.robot.Robot.elevatorEncL.getDistance();
-        RobotConstants.encoderPosR = frc.robot.Robot.elevatorEncR.getDistance();
+        RobotConstants.encoderPosR = frc.robot.Robot.elevatorEnc.getDistance();
         RobotConstants.carrigeBot=frc.robot.Robot.CarrigeBottom.get();
         RobotConstants.carrigeTop=frc.robot.Robot.CarrigeTop.get();
         RobotConstants.stg2Top=frc.robot.Robot.stg2Top.get();

@@ -124,8 +124,7 @@ public class Elevator {
 
     Robot.elevatorL.set(0);
     Robot.elevatorR.set(0);
-    Robot.elevatorEncL.reset();
-    Robot.elevatorEncR.reset();
+    Robot.elevatorEnc.reset();
     // if using only encoders built into motors
     RelativeEncoder eleLEncoder = Robot.elevatorL.getEncoder();
     eleLEncoder.setPosition(0);
