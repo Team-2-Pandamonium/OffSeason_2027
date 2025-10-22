@@ -144,11 +144,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     SparkMaxConfig configR1 = new SparkMaxConfig();
     configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
+        .velocityFF(0)
         .p(PIDVar.right1P, ClosedLoopSlot.kSlot0)
         .i(PIDVar.right1I, ClosedLoopSlot.kSlot0)
         .d(PIDVar.right1D, ClosedLoopSlot.kSlot0);
     SparkMaxConfig configR2 = new SparkMaxConfig();
-    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(right1).closedLoop
+    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(right1).closedLoop        
+        .velocityFF(0)
         .p(PIDVar.right2P, ClosedLoopSlot.kSlot0)
         .i(PIDVar.right2I, ClosedLoopSlot.kSlot0)
         .d(PIDVar.right2D, ClosedLoopSlot.kSlot0);
@@ -157,11 +159,13 @@ public class Robot extends TimedRobot {
 
     SparkMaxConfig configL1 = new SparkMaxConfig();
     configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
+        .velocityFF(0)
         .p(PIDVar.left1P, ClosedLoopSlot.kSlot0)
         .i(PIDVar.left1I, ClosedLoopSlot.kSlot0)
         .d(PIDVar.left1D, ClosedLoopSlot.kSlot0);
     SparkMaxConfig configL2 = new SparkMaxConfig();
     configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(left1).closedLoop
+        .velocityFF(0)
         .p(PIDVar.left2P, ClosedLoopSlot.kSlot0)
         .i(PIDVar.left2I, ClosedLoopSlot.kSlot0)
         .d(PIDVar.left2D, ClosedLoopSlot.kSlot0);
@@ -170,11 +174,13 @@ public class Robot extends TimedRobot {
 
     SparkMaxConfig configEleR = new SparkMaxConfig();
     configEleR.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
+        .velocityFF(0)
         .p(PIDVar.elevatorRP, ClosedLoopSlot.kSlot0)
         .i(PIDVar.elevatorRI, ClosedLoopSlot.kSlot0)
         .d(PIDVar.elevatorRD, ClosedLoopSlot.kSlot0);
     SparkMaxConfig configEleL = new SparkMaxConfig();
     configEleL.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(elevatorR, true).closedLoop
+        .velocityFF(0)
         .p(PIDVar.elevatorLP, ClosedLoopSlot.kSlot0)
         .i(PIDVar.elevatorLI, ClosedLoopSlot.kSlot0)
         .d(PIDVar.elevatorLD, ClosedLoopSlot.kSlot0);
@@ -182,12 +188,14 @@ public class Robot extends TimedRobot {
     elevatorL.configure(configEleL, null, null);
 
     SparkMaxConfig configManShort = new SparkMaxConfig();
-    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
+    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop        
+        .velocityFF(0)
         .p(PIDVar.manShortP, ClosedLoopSlot.kSlot0)
         .i(PIDVar.manShortI, ClosedLoopSlot.kSlot0)
         .d(PIDVar.manShortD, ClosedLoopSlot.kSlot0);
     SparkMaxConfig configManLong = new SparkMaxConfig();
     configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
+        .velocityFF(0)
         .p(PIDVar.manLongP, ClosedLoopSlot.kSlot0)
         .i(PIDVar.manLongI, ClosedLoopSlot.kSlot0)
         .d(PIDVar.manLongD, ClosedLoopSlot.kSlot0);
