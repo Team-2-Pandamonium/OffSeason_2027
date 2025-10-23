@@ -103,21 +103,26 @@ public class Elevator {
     double CurrentR = Robot.elevatorR.getOutputCurrent();
     double prevCurrentR = Robot.elevatorR.getOutputCurrent();
     final double currentThreshold = 0.01;
-    while (((!(Math.abs(CurrentR - prevCurrentR) > currentThreshold))
-        || (!(Math.abs(CurrentL - prevCurrentL) > currentThreshold))) ||
-        Robot.DRIV_CONTROLLER.getLeftStickButton(/* emergancy stop */)) {
+    while (true) {
 
       Robot.elevatorR.set(1);
       prevCurrentL = CurrentL;
       prevCurrentR = CurrentR;
       CurrentL = Robot.elevatorL.getOutputCurrent();
       CurrentR = Robot.elevatorR.getOutputCurrent();
+      RobotConstants.carrigeBot=Robot.CarrigeBottom.get();
 
-      System.out.println(prevCurrentL + " prevCurrL");
-      System.out.println(prevCurrentR + " prevCurrR");
-      System.out.println(CurrentL + " CurrL");
-      System.out.println(CurrentR + " CurrR");
-
+      // System.out.println(prevCurrentL + " prevCurrL");
+      // System.out.println(prevCurrentR + " prevCurrR");
+      // System.out.println(CurrentL + " CurrL");
+      // System.out.println(CurrentR + " CurrR");
+      if (((!(Math.abs(CurrentR - prevCurrentR) > currentThreshold))
+          || (!(Math.abs(CurrentL - prevCurrentL) > currentThreshold)))) {
+        break;
+      }
+      if (RobotConstants.carrigeBot){
+        break;
+      }
     }
 
     Robot.elevatorL.set(0);

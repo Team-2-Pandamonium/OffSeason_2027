@@ -49,6 +49,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.InternalButton;
@@ -137,6 +138,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    //SparkMaxConfig
     SparkMaxConfig configR1 = new SparkMaxConfig();
     configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
         .velocityFF(0)
@@ -181,42 +183,14 @@ public class Robot extends TimedRobot {
         .d(PIDVar.elevatorLD, ClosedLoopSlot.kSlot0);
     elevatorR.configure(configEleR, null, null);
     elevatorL.configure(configEleL, null, null);
+
     SparkMaxConfig configManShort = new SparkMaxConfig();
-    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true)/*
-                                                                                                        * .closedLoop
-                                                                                                        * .velocityFF(0)
-                                                                                                        * .p(PIDVar.
-                                                                                                        * manShortP,
-                                                                                                        * ClosedLoopSlot
-                                                                                                        * .kSlot0)
-                                                                                                        * .i(PIDVar.
-                                                                                                        * manShortI,
-                                                                                                        * ClosedLoopSlot
-                                                                                                        * .kSlot0)
-                                                                                                        * .d(PIDVar.
-                                                                                                        * manShortD,
-                                                                                                        * ClosedLoopSlot
-                                                                                                        * .kSlot0)
-                                                                                                        */;
+    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
     SparkMaxConfig configManLong = new SparkMaxConfig();
-    configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true)/*
-                                                                                                       * .closedLoop
-                                                                                                       * .velocityFF(0)
-                                                                                                       * .p(PIDVar.
-                                                                                                       * manLongP,
-                                                                                                       * ClosedLoopSlot.
-                                                                                                       * kSlot0)
-                                                                                                       * .i(PIDVar.
-                                                                                                       * manLongI,
-                                                                                                       * ClosedLoopSlot.
-                                                                                                       * kSlot0)
-                                                                                                       * .d(PIDVar.
-                                                                                                       * manLongD,
-                                                                                                       * ClosedLoopSlot.
-                                                                                                       * kSlot0)
-                                                                                                       */;
+    configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
     manShort.configure(configManShort, null, null);
     manLong.configure(configManLong, null, null);
+    //reseting 0
     elevatorEnc.reset();
   }
 
@@ -272,10 +246,10 @@ public class Robot extends TimedRobot {
       } else if (RobotConstants.OpperabButton &&
           !RobotConstants.OpperarightBumper) { // lvl2
         elevatorRREV.setReference(Elevator.CalcRot(2, RobotConstants.elevatorHeight), ControlType.kPosition);
-      } else if (RobotConstants.OpperaxButton &&
+      } else if (RobotConstants.OpperayButton &&
           !RobotConstants.OpperarightBumper) { // lvl3
         elevatorRREV.setReference(Elevator.CalcRot(3, RobotConstants.elevatorHeight), ControlType.kPosition);
-      } else if (RobotConstants.OpperayButton &&
+      } else if (RobotConstants.OpperaxButton &&
           !RobotConstants.OpperarightBumper) { // hp
         elevatorRREV.setReference(Elevator.CalcRot(7, RobotConstants.elevatorHeight), ControlType.kPosition);
       } else if (RobotConstants.OpperaaButton &&
@@ -284,7 +258,7 @@ public class Robot extends TimedRobot {
       } else if (RobotConstants.OpperabButton
           && RobotConstants.OpperarightBumper) { // lvl2 r
         elevatorRREV.setReference(Elevator.CalcRot(5, RobotConstants.elevatorHeight), ControlType.kPosition);
-      } else if (RobotConstants.OpperaxButton
+      } else if (RobotConstants.OpperayButton
           && RobotConstants.OpperarightBumper) { // lvl3 r
         elevatorRREV.setReference(Elevator.CalcRot(6, RobotConstants.elevatorHeight), ControlType.kPosition);
       } else if (RobotConstants.OpperaleftBumper) {

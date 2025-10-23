@@ -1,0 +1,38 @@
+WARNINGS:
+DO NOT START THE ROBOT WITHOUT THE ELEVATOR IN THE 0 POSITION
+
+CONTROL SCHEME:
+Driver:
+left stick - left side wheels
+right stick - right side wheels
+bumper L&R - turbo mode
+
+Opperator:
+Y - Level 3
+B - Level 2
+A - Level 1
+X - HP station
+Level_Button+RB - level rotate
+LB - elevator 0
+DPad_Up - elevator up ("fast")
+DPad_Up_Right - elevator up ("slow")
+DPad_Down - elevator down ("fast")
+DPad_Down_Right - elevator down ("slow")
+RT - intake
+LT - outtake
+Left Stick - manipulator long arm
+Right Stick - manipulator short arm
+
+TODO:
+(HIGHEST PRIORITY) OVERALL CODE REVIEW TO CATCH OBVIOUS BUGS BEFORE PHYSICAL TESTING
+discuss with drive team if we want safties to prevent moving at full speed with elevator up (and impliment if needed)
+Organize/comment code
+auton
+    - move
+test and prob fix elevator 0ing
+shuffleboard documaentation 
+    - elevator height
+    - camera
+    - reset 0 button
+    - make dumb button? (start ignoring sensors)
+elevator trajectory planning instead of pid (LOW PRIORITY)
