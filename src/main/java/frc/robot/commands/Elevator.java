@@ -3,10 +3,6 @@ package frc.robot.commands;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 
-/*
- * TODO:
- * - pid loop for elevator bc we actaully have ecoders :)
- */
 public class Elevator {
   
   /**
