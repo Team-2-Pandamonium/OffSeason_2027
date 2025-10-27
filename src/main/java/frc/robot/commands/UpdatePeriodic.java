@@ -139,7 +139,7 @@ public class UpdatePeriodic {
     }
 
     public static void updateSensorValues() {
-        RobotConstants.elevatorRotHeight = frc.robot.Robot.elevatorEnc.getDistance();
+        RobotConstants.elevatorRotHeight = frc.robot.Robot.elevatorEnc.getPosition();
         RobotConstants.carrigeBot=frc.robot.Robot.CarrigeBottom.get();
         RobotConstants.carrigeTop=frc.robot.Robot.CarrigeTop.get();
         RobotConstants.stg2Top=frc.robot.Robot.stg2Top.get();
@@ -148,6 +148,7 @@ public class UpdatePeriodic {
             System.err.println(
                     "ERROR: elevator encoder not reading 0 when at bottom, rezeroed " + RobotConstants.elevatorHeight);
             RobotConstants.elevatorHeight = 0;
+            frc.robot.Robot.elevatorEnc.setPosition(0);
         }
     }
 }

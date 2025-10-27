@@ -103,7 +103,6 @@ public class Robot extends TimedRobot {
   // reason)
   // public static final RelativeEncoder manShortEnc = manShort.getEncoder();
   // public static final RelativeEncoder manLongEnc = manLong.getEncoder();
-  // public static final RelativeEncoder elevatorREnc = elevatorR.getEncoder();
   // public static final RelativeEncoder elevatorLEnc = elevatorL.getEncoder();
   // public static final RelativeEncoder right1Enc = right1.getEncoder();
   // public static final RelativeEncoder right2Enc = right2.getEncoder();
@@ -113,7 +112,7 @@ public class Robot extends TimedRobot {
   public static final SparkClosedLoopController elevatorRREV = elevatorR.getClosedLoopController();
   public static final SparkClosedLoopController elevatorLREV = elevatorL.getClosedLoopController();
   //sensors
-  public static final Encoder elevatorEnc = new Encoder(0, 1);
+  public static final RelativeEncoder elevatorEnc = elevatorR.getEncoder();
   // public static final Encoder elevatorEncL = new Encoder(2, 3);
   // public static final CANrange elevatorHeight = new CANrange(3);
   public static final DigitalInput stg2Top = new DigitalInput(4);
@@ -140,32 +139,16 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     //SparkMaxConfig
     SparkMaxConfig configR1 = new SparkMaxConfig();
-    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
-        .velocityFF(0)
-        .p(PIDVar.right1P, ClosedLoopSlot.kSlot0)
-        .i(PIDVar.right1I, ClosedLoopSlot.kSlot0)
-        .d(PIDVar.right1D, ClosedLoopSlot.kSlot0);
+    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
     SparkMaxConfig configR2 = new SparkMaxConfig();
-    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(right1).closedLoop        
-        .velocityFF(0)
-        .p(PIDVar.right2P, ClosedLoopSlot.kSlot0)
-        .i(PIDVar.right2I, ClosedLoopSlot.kSlot0)
-        .d(PIDVar.right2D, ClosedLoopSlot.kSlot0);
+    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(right1);
     right1.configure(configR1, null, null);
     right2.configure(configR2, null, null);
 
     SparkMaxConfig configL1 = new SparkMaxConfig();
-    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
-        .velocityFF(0)
-        .p(PIDVar.left1P, ClosedLoopSlot.kSlot0)
-        .i(PIDVar.left1I, ClosedLoopSlot.kSlot0)
-        .d(PIDVar.left1D, ClosedLoopSlot.kSlot0);
+    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
     SparkMaxConfig configL2 = new SparkMaxConfig();
-    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(left1).closedLoop
-        .velocityFF(0)
-        .p(PIDVar.left2P, ClosedLoopSlot.kSlot0)
-        .i(PIDVar.left2I, ClosedLoopSlot.kSlot0)
-        .d(PIDVar.left2D, ClosedLoopSlot.kSlot0);
+    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(left1);
     left1.configure(configL1, null, null);
     left2.configure(configL2, null, null);
 
@@ -191,7 +174,7 @@ public class Robot extends TimedRobot {
     manShort.configure(configManShort, null, null);
     manLong.configure(configManLong, null, null);
     //reseting 0
-    elevatorEnc.reset();
+    elevatorEnc.setPosition(0);
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
@@ -236,7 +219,7 @@ public class Robot extends TimedRobot {
     // manLong.set(0);
     // }
 
-    RobotConstants.elevatorHeight = Elevator.RottoIn(elevatorEnc.getDistance());
+    RobotConstants.elevatorHeight = Elevator.RottoIn(elevatorEnc.getPosition());
     // // sets the speed of the elevator motors based on what the operator inputs
     if (!(RobotConstants.OpperaDPadDown || RobotConstants.OpperaDPadDownRight || RobotConstants.OpperaDPadUp
         || RobotConstants.OpperaDPadUpRight || RobotConstants.OpperaDPadRight)) {

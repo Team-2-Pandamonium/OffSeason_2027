@@ -97,40 +97,10 @@ public class Elevator {
 
 
   public static void reset0() { // DO NOT USE RN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //go down until we see the voltage of motors spike and then we know its at the bottom
-    double CurrentL = Robot.elevatorL.getOutputCurrent();
-    double prevCurrentL = Robot.elevatorL.getOutputCurrent();
-    double CurrentR = Robot.elevatorR.getOutputCurrent();
-    double prevCurrentR = Robot.elevatorR.getOutputCurrent();
-    final double currentThreshold = 0.01;
-    while (true) {
-
-      Robot.elevatorR.set(1);
-      prevCurrentL = CurrentL;
-      prevCurrentR = CurrentR;
-      CurrentL = Robot.elevatorL.getOutputCurrent();
-      CurrentR = Robot.elevatorR.getOutputCurrent();
-      RobotConstants.carrigeBot=Robot.CarrigeBottom.get();
-
-      // System.out.println(prevCurrentL + " prevCurrL");
-      // System.out.println(prevCurrentR + " prevCurrR");
-      // System.out.println(CurrentL + " CurrL");
-      // System.out.println(CurrentR + " CurrR");
-      if (((!(Math.abs(CurrentR - prevCurrentR) > currentThreshold))
-          || (!(Math.abs(CurrentL - prevCurrentL) > currentThreshold)))) {
-        break;
-      }
-      if (RobotConstants.carrigeBot){
-        break;
-      }
+    while (Robot.CarrigeBottom.get()) {
+      Robot.elevatorR.set(-0.5);
     }
-
-    Robot.elevatorL.set(0);
     Robot.elevatorR.set(0);
-    Robot.elevatorEnc.reset();
-    // if using only encoders built into motors
-    RelativeEncoder eleLEncoder = Robot.elevatorL.getEncoder();
-    eleLEncoder.setPosition(0);
     RelativeEncoder eleREncoder = Robot.elevatorR.getEncoder();
     eleREncoder.setPosition(0);
   }
