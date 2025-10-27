@@ -54,6 +54,11 @@ public class Elevator {
     return movDist;
   }
 
+  /**
+   * 
+   * @param inches
+   * @return <b>rotations<b>
+   */
   public static double inchesToRotations(double inches) {
     double rotations;
     rotations = ((inches * 25.4) / 20);
@@ -65,6 +70,11 @@ public class Elevator {
     // multiplied the number of teeth by the dist between them) ;-;
   }
 
+  /**
+   * 
+   * @param rot
+   * @return <b>In<b>
+   */
   public static double RottoIn(double rot) {
     double in;
     rot/=9; //gear ratio
@@ -88,7 +98,10 @@ public class Elevator {
     return rot;
   }
 
-
+/**
+ * 
+ * @param powered (use the motors to go to the 0 point or not)
+ */
   public static void reset0(boolean powered) {
     if (powered) {
       while (Robot.CarrigeBottom.get()) {
