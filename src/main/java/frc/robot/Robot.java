@@ -154,27 +154,27 @@ public class Robot extends TimedRobot {
 
       if (RobotConstants.OpperaaButton &&
           !(RobotConstants.OpperarightBumper)) { // lvl1
-        elevatorRREV.setReference(Elevator.CalcRot(1, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(1, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       } else if (RobotConstants.OpperabButton &&
           !RobotConstants.OpperarightBumper) { // lvl2
-        elevatorRREV.setReference(Elevator.CalcRot(2, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(2, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       } else if (RobotConstants.OpperayButton &&
           !RobotConstants.OpperarightBumper) { // lvl3
-        elevatorRREV.setReference(Elevator.CalcRot(3, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(3, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       } else if (RobotConstants.OpperaxButton &&
           !RobotConstants.OpperarightBumper) { // hp
-        elevatorRREV.setReference(Elevator.CalcRot(7, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(7, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       } else if (RobotConstants.OpperaaButton &&
           RobotConstants.OpperarightBumper) { // lvl1r
-        elevatorRREV.setReference(Elevator.CalcRot(4, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(4, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       } else if (RobotConstants.OpperabButton
           && RobotConstants.OpperarightBumper) { // lvl2 r
-        elevatorRREV.setReference(Elevator.CalcRot(5, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(5, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       } else if (RobotConstants.OpperayButton
           && RobotConstants.OpperarightBumper) { // lvl3 r
-        elevatorRREV.setReference(Elevator.CalcRot(6, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(6, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       } else /* if (RobotConstants.OpperaleftBumper) */ {
-        elevatorRREV.setReference(Elevator.CalcRot(0, RobotConstants.elevatorHeight), ControlType.kPosition);
+        elevatorRREV.setReference(Elevator.CalcRot(0, RobotConstants.elevatorHeight)*RobotConstants.elevatorMaxSpeed, ControlType.kPosition);
       }
     } else {
       if (RobotConstants.OpperaDPadUp && RobotConstants.elevatorHeight < RobotConstants.elevatorMaxHeight) {

@@ -20,7 +20,7 @@ public class RobotConstants {
     // elevator (all values in inches)
     public static final double elevatorMaxHeight = 60;
     public static final double elevatorMaxRot = Elevator.RottoIn(elevatorMaxHeight);
-    public static final double intake_speed = 0.5;
+    public static final double elevatorMaxSpeed = 0.75;
     public static double elevatorHeight; //height in Inches
     public static double elevatorRotHeight; //height in rotations
     public static final double Level1 = 24;
