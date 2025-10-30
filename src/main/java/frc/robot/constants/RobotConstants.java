@@ -16,7 +16,7 @@ public class RobotConstants {
     public static double left2Enc;
 
     // elevator (all values in inches)
-    public static final double kPoffset=1;
+    public static final double kPoffset=1.5;
     public static final double GrdOff=(8+9/16);
     public static final double elevatorMaxHeight = 60;
     public static final double elevatorMaxRot = 76.25; //EXPERIMENTALLY DETERMINED
@@ -34,6 +34,8 @@ public class RobotConstants {
     public static boolean carrigeTop;
     public static boolean stg2Top;
     public static boolean carrigeBot;
+    public static double elevatorOutput;
+    public static boolean Endstop;
     // manipulaor
 
     // inputs, driver

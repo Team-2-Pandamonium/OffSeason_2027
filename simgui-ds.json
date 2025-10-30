@@ -1,4 +1,9 @@
 {
+  "System Joysticks": {
+    "window": {
+      "enabled": false
+    }
+  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -89,5 +94,14 @@
       "povCount": 0
     }
   ],
-  "useEnableDisableHotkeys": true
+  "robotJoysticks": [
+    {
+      "guid": "78696e70757401000000000000000000"
+    },
+    {
+      "guid": "78696e70757401000000000000000000"
+    }
+  ],
+  "useEnableDisableHotkeys": true,
+  "useEstopHotkey": true
 }

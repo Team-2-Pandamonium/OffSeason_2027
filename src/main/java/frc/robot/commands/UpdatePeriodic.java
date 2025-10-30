@@ -132,11 +132,12 @@ public class UpdatePeriodic {
         RobotConstants.carrigeTop=frc.robot.Robot.CarrigeTop.get();
         RobotConstants.stg2Top=frc.robot.Robot.stg2Top.get();
         RobotConstants.elevatorHeight = Elevator.RottoIn(RobotConstants.elevatorRotHeight);
-        if (RobotConstants.carrigeBot && RobotConstants.elevatorHeight != 0) {
-            System.err.println(
-                    "ERROR: elevator encoder not reading 0 when at bottom, rezeroed " + RobotConstants.elevatorHeight);
-            RobotConstants.elevatorHeight = 0;
-            frc.robot.Robot.elevatorEnc.setPosition(0);
+        if (RobotConstants.carrigeBot == false) {
+            RobotConstants.Endstop = true;
+        } else if (RobotConstants.stg2Top == false && RobotConstants.carrigeTop == false) {
+            RobotConstants.Endstop = true;
+        } else {
+            RobotConstants.Endstop = false;
         }
     }
 }

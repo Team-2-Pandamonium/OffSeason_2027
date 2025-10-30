@@ -84,18 +84,18 @@ public class Elevator {
     return rot;
   }
 
-  // /**
-  // *
-  // * @param powered (use the motors to go to the 0 point or not)
-  // */
-  // public static void reset0(boolean powered) {
-  // if (powered) {
-  // while (Robot.CarrigeBottom.get()) {
-  // Robot.elevatorR.set(-0.5);
-  // }
-  // Robot.elevatorR.set(0);
-  // }
-  // Robot.elevatorEnc.setPosition(0);
-  // }
+  /**
+  *
+  * @param powered (use the motors to go to the 0 point or not)
+  */
+  public static void reset0(boolean powered) {
+  if (powered) {
+  while (Robot.CarrigeBottom.get()) {
+  Robot.elevatorR.set(-0.3);
+  }
+  Robot.elevatorR.set(0);
+  }
+  Robot.elevatorEnc.setPosition(0);
+  }
 
 }

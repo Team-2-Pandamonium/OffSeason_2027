@@ -2,39 +2,27 @@ package frc.robot;
 
 import frc.robot.commands.UpdatePeriodic;
 import frc.robot.commands.Elevator;
-import frc.robot.constants.PIDVar;
+// import frc.robot.constants.PIDVar;
 import frc.robot.constants.RobotConstants;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
+// import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
+// import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.SparkClosedLoopController;
+// import com.revrobotics.spark.SparkClosedLoopController;
 
-import edu.wpi.first.networktables.GenericEntry;
+// import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+// import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 
-/*
- * CONTROL SCHEME
- *  Driving -
- * left stick = left wheels
- * right stick = right wheels
- * right trigger = hyperspeed
- * 
- * Other functions -
- * Y button = raise elevator
- * A button = lower elevator
- * B button = intake
- * X button = outake
- */
+
 public class Robot extends TimedRobot {
 
   //motors
@@ -213,66 +201,64 @@ public class Robot extends TimedRobot {
       // make it be less than the elevator max speed and not jsut proportional to the dist from setpoint
       if (RobotConstants.OpperaaButton &&
           !(RobotConstants.OpperarightBumper)) { // lvl1
-        elevatorR.set(Elevator.CalcRot(1, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(1, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       } else if (RobotConstants.OpperabButton &&
           !RobotConstants.OpperarightBumper) { // lvl2
-        elevatorR.set(Elevator.CalcRot(2, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(2, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       } else if (RobotConstants.OpperayButton &&
           !RobotConstants.OpperarightBumper) { // lvl3
-        elevatorR.set(Elevator.CalcRot(3, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(3, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       } else if (RobotConstants.OpperaxButton &&
           !RobotConstants.OpperarightBumper) { // hp
-        elevatorR.set(Elevator.CalcRot(7, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(7, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       } else if (RobotConstants.OpperaaButton &&
           RobotConstants.OpperarightBumper) { // lvl1r
-        elevatorR.set(Elevator.CalcRot(4, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(4, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       } else if (RobotConstants.OpperabButton
           && RobotConstants.OpperarightBumper) { // lvl2 r
-        elevatorR.set(Elevator.CalcRot(5, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(5, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       } else if (RobotConstants.OpperayButton
           && RobotConstants.OpperarightBumper) { // lvl3 r
-        elevatorR.set(Elevator.CalcRot(6, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(6, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       } else if (RobotConstants.OpperaleftBumper) {
-        elevatorR.set(Elevator.CalcRot(0, RobotConstants.elevatorHeight)
+        RobotConstants.elevatorOutput = (Elevator.CalcRot(0, RobotConstants.elevatorHeight)
             / (RobotConstants.elevatorMaxRot - RobotConstants.kPoffset));
       }
     } else {
 
       if (RobotConstants.OpperaDPadUp && RobotConstants.elevatorHeight < RobotConstants.elevatorMaxHeight) {
-        elevatorR.set(0.3);
+        RobotConstants.elevatorOutput = (0.3);
       } else if (RobotConstants.OpperaDPadUpRight && RobotConstants.elevatorHeight < RobotConstants.elevatorMaxHeight) {
-        elevatorR.set(0.1);
+        RobotConstants.elevatorOutput = (0.1);
       } else if (RobotConstants.OpperaDPadDown && RobotConstants.elevatorHeight > 0) {
-        elevatorR.set(-0.3);
+        RobotConstants.elevatorOutput = (-0.3);
       } else if (RobotConstants.OpperaDPadDownRight &&
           RobotConstants.elevatorHeight > 0) {
-        elevatorR.set(-0.1);
+        RobotConstants.elevatorOutput = (-0.1);
       }
 
-  }
-  // System.out.println(elevatorEnc.getPosition());
-  if (elevatorR.get() != 0
-      && ((!RobotConstants.stg2Top && !RobotConstants.carrigeTop) /* || !RobotConstants.carrigeBot */)) {
-    elevatorR.set(0);
+    }
+    if (elevatorR.get() != 0 && RobotConstants.Endstop == true) {
+      RobotConstants.elevatorOutput = 0;
     System.err.println("ERROR: TRYING TO OVER EXTEND ELEVATOR, setting elevator speed to 0");
   }
-  // System.out.println(elevatorEnc.getPosition() + " enc pos");
-  // System.out.println(Elevator.inchesToRotations(elevatorEnc.getPosition()));
-  // System.out.println(Elevator.RottoIn(RobotConstants.elevatorMaxRot));
+  System.out.println(RobotConstants.Endstop);
+  elevatorR.set(RobotConstants.elevatorOutput);
+
   // MANIPULATOR
   if (RobotConstants.OpperarightTrigger > 0) { // intake
     manLong.set(RobotConstants.OpperarightTrigger);
-    manLong.set(RobotConstants.OpperarightTrigger);
+    manShort.set(RobotConstants.OpperarightTrigger);
   } else if (RobotConstants.OpperaleftTrigger > 0) { // outtake
     manLong.set(-RobotConstants.OpperaleftTrigger);
-    manLong.set(-RobotConstants.OpperaleftTrigger);
+    manShort.set(-RobotConstants.OpperaleftTrigger);
   } else {
     manLong.set(RobotConstants.OpperaleftStick);
     manShort.set(RobotConstants.OpperarightStick);
