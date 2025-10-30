@@ -250,6 +250,16 @@ public class Robot extends TimedRobot {
     System.err.println("ERROR: TRYING TO OVER EXTEND ELEVATOR, setting elevator speed to 0");
   }
   System.out.println(RobotConstants.Endstop);
+
+  if (Math.abs(RobotConstants.elevatorOutput) > RobotConstants.elevatorMaxSpeed) {
+    if (RobotConstants.elevatorOutput < 0) {
+      RobotConstants.elevatorOutput = -RobotConstants.elevatorMaxSpeed;
+    } else if (RobotConstants.elevatorOutput > 0) {
+      RobotConstants.elevatorOutput = RobotConstants.elevatorMaxSpeed;
+    } else {
+      System.out.println("ERROR: elevator max speed is 0");
+    }
+  }
   elevatorR.set(RobotConstants.elevatorOutput);
 
   // MANIPULATOR
