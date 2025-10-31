@@ -11,25 +11,25 @@ public class UpdatePeriodic {
         // if any of these are below the deadzone, it equals zero. abs so the controller
         // can go negative
         //Driver
-        if (Math.abs(frc.robot.Robot.DRIV_CONTROLLER.getLeftY()) >= RobotConstants.deadzone) {
+        if (Math.abs(frc.robot.Robot.DRIV_CONTROLLER.getLeftY()) >= RobotConstants.Drivdeadzone) {
             RobotConstants.DrivleftStick = frc.robot.Robot.DRIV_CONTROLLER.getLeftY();
         } else {
             RobotConstants.DrivleftStick = 0;
         }
 
-        if (Math.abs(frc.robot.Robot.DRIV_CONTROLLER.getRightY()) >= RobotConstants.deadzone) {
+        if (Math.abs(frc.robot.Robot.DRIV_CONTROLLER.getRightY()) >= RobotConstants.Drivdeadzone) {
             RobotConstants.DrivrightStick = frc.robot.Robot.DRIV_CONTROLLER.getRightY();
         } else {
             RobotConstants.DrivrightStick = 0;
         }
 
-        if (frc.robot.Robot.DRIV_CONTROLLER.getLeftTriggerAxis() >= RobotConstants.deadzone) {
+        if (frc.robot.Robot.DRIV_CONTROLLER.getLeftTriggerAxis() >= RobotConstants.Drivdeadzone) {
             RobotConstants.DrivleftTrigger = frc.robot.Robot.DRIV_CONTROLLER.getLeftTriggerAxis();
         } else {
             RobotConstants.DrivleftTrigger = 0;
         }
 
-        if (frc.robot.Robot.DRIV_CONTROLLER.getRightTriggerAxis() >= RobotConstants.deadzone) {
+        if (frc.robot.Robot.DRIV_CONTROLLER.getRightTriggerAxis() >= RobotConstants.Drivdeadzone) {
             RobotConstants.DrivrightTrigger = frc.robot.Robot.DRIV_CONTROLLER.getRightTriggerAxis();
         } else {
             RobotConstants.DrivrightTrigger = 0;
@@ -43,26 +43,26 @@ public class UpdatePeriodic {
         RobotConstants.DrivaButton = frc.robot.Robot.DRIV_CONTROLLER.getAButton();
         RobotConstants.DrivyButton = frc.robot.Robot.DRIV_CONTROLLER.getYButton();
         // Opperator
-        if (Math.abs(frc.robot.Robot.OPPERA_CONTROLLER.getLeftY()) >= RobotConstants.deadzone) {
+        if (Math.abs(frc.robot.Robot.OPPERA_CONTROLLER.getLeftY()) >= RobotConstants.Oppdeadzone) {
             RobotConstants.OpperaleftStick = frc.robot.Robot.OPPERA_CONTROLLER.getLeftY();
         } else {
             
             RobotConstants.OpperaleftStick = 0;
         }
 
-        if (Math.abs(frc.robot.Robot.OPPERA_CONTROLLER.getRightY()) >= RobotConstants.deadzone) {
+        if (Math.abs(frc.robot.Robot.OPPERA_CONTROLLER.getRightY()) >= RobotConstants.Oppdeadzone) {
             RobotConstants.OpperarightStick = frc.robot.Robot.OPPERA_CONTROLLER.getRightY();
         } else {
             RobotConstants.OpperarightStick = 0;
         }
 
-        if (frc.robot.Robot.OPPERA_CONTROLLER.getLeftTriggerAxis() >= RobotConstants.deadzone) {
+        if (frc.robot.Robot.OPPERA_CONTROLLER.getLeftTriggerAxis() >= RobotConstants.Oppdeadzone) {
             RobotConstants.OpperaleftTrigger = frc.robot.Robot.OPPERA_CONTROLLER.getLeftTriggerAxis();
         } else {
             RobotConstants.OpperaleftTrigger = 0;
         }
 
-        if (frc.robot.Robot.OPPERA_CONTROLLER.getRightTriggerAxis() >= RobotConstants.deadzone) {
+        if (frc.robot.Robot.OPPERA_CONTROLLER.getRightTriggerAxis() >= RobotConstants.Oppdeadzone) {
             RobotConstants.OpperarightTrigger = frc.robot.Robot.OPPERA_CONTROLLER.getRightTriggerAxis();
         } else {
             RobotConstants.OpperarightTrigger = 0;
@@ -118,12 +118,12 @@ public class UpdatePeriodic {
                 break;
 
             case -1: // Nothing pressed
-
                 break;
             default:
                 System.err.println("Error somehow you pressed a button on the DPad that doesnt exist");
                 break;
         }
+        // System.out.println(RobotConstants.OpperaDPadUp);
     }
 
     public static void updateSensorValues() {
@@ -133,11 +133,14 @@ public class UpdatePeriodic {
         RobotConstants.stg2Top=frc.robot.Robot.stg2Top.get();
         RobotConstants.elevatorHeight = Elevator.RottoIn(RobotConstants.elevatorRotHeight);
         if (RobotConstants.carrigeBot == false) {
-            RobotConstants.Endstop = true;
-        } else if (RobotConstants.stg2Top == false && RobotConstants.carrigeTop == false) {
-            RobotConstants.Endstop = true;
+            RobotConstants.bottEndstop = true;
+        }else{
+            RobotConstants.bottEndstop=false;
+        }
+        if (RobotConstants.stg2Top == false && RobotConstants.carrigeTop == false) {
+            RobotConstants.topEndstop = true;
         } else {
-            RobotConstants.Endstop = false;
+            RobotConstants.topEndstop = false;
         }
     }
 }

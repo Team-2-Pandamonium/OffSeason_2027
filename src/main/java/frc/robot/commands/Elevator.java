@@ -95,7 +95,10 @@ public class Elevator {
   }
   Robot.elevatorR.set(0);
   }
-  Robot.elevatorEnc.setPosition(0);
+  if (!RobotConstants.bottEndstop) {
+    Robot.elevatorEnc.setPosition(0);
+  }
+  
   }
 
 }
