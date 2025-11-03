@@ -40,6 +40,10 @@ public class RobotConstants {
     // manipulator
     public static final double manMaxSPD=0.1;
 
+    // drive
+    public static double rightOutput;
+    public static double leftOutput;
+
     // inputs, driver
     public static double DrivrightTrigger;
     public static double DrivleftStick;

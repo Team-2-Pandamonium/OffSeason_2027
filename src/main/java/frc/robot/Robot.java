@@ -19,6 +19,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -58,7 +59,7 @@ public class Robot extends TimedRobot {
   public static final UsbCamera camera = CameraServer.startAutomaticCapture();
 
   // controllers
-  public static final XboxController DRIV_CONTROLLER = new XboxController(0);
+  public static final PS5Controller DRIV_CONTROLLER = new PS5Controller(0);
   public static final XboxController OPPERA_CONTROLLER = new XboxController(1);
 
   // Timers :(
@@ -102,9 +103,9 @@ public class Robot extends TimedRobot {
     elevatorL.configure(configEleL, null, null);
 
     SparkMaxConfig configManShort = new SparkMaxConfig();
-    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
+    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(60).disableFollowerMode().inverted(true);
     SparkMaxConfig configManLong = new SparkMaxConfig();
-    configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
+    configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(60).disableFollowerMode().inverted(false);
     manShort.configure(configManShort, null, null);
     manLong.configure(configManLong, null, null);
 
@@ -240,6 +241,8 @@ public class Robot extends TimedRobot {
       manShort.set(Math.abs(RobotConstants.OpperarightStick) * RobotConstants.OpperarightStick);
 
     }
+    System.out.println("Short " + manShort.getOutputCurrent());
+    System.out.println("Long " + manLong.getOutputCurrent());
 
     // DRIVE
     if (drivModeTimer.get() >= 0.1) { // toggle drive mode
@@ -255,34 +258,42 @@ public class Robot extends TimedRobot {
 
     if (RobotConstants.slowMode) { // slowmode max speed
       RobotConstants.robotAccMaxSpeed = RobotConstants.slowModeMaxSpeed;
+    } else if (RobotConstants.turboMode) {
+      RobotConstants.robotAccMaxSpeed = 1;
     } else {
       RobotConstants.robotAccMaxSpeed = RobotConstants.robotMaxSpeed;
     }
 
-    if (RobotConstants.topEndstop || (RobotConstants.stg2Top == false)) { // go to slow mode if elevator at top or stage
-                                                                          // 2 at top
+    if (RobotConstants.topEndstop || (RobotConstants.stg2Top == false)) { // slow mode if elevator or stage 2 at top
       RobotConstants.turboMode = false;
       RobotConstants.slowMode = true;
     }
 
-    if (RobotConstants.DrivleftStick > 0 && RobotConstants.DrivrightStick > 0) { // if backwards then make slow mode
-                                                                                 // even slower and turn off turbo mode
+    if (RobotConstants.DrivleftStick > 0 && RobotConstants.DrivrightStick > 0) { // if backwards make slow mode slower
       RobotConstants.turboMode = false;
       RobotConstants.slowModeMaxSpeed = 0.1;
     } else {
       RobotConstants.slowModeMaxSpeed = 0.125;
     }
 
-    if (RobotConstants.turboMode==false) {
-      left1.set(
-          (Math.abs(RobotConstants.DrivleftStick) * RobotConstants.DrivleftStick) * RobotConstants.robotAccMaxSpeed);
-      right1.set(
-          (Math.abs(RobotConstants.DrivrightStick) * RobotConstants.DrivrightStick) * RobotConstants.robotAccMaxSpeed);
+    if (RobotConstants.DrivleftTrigger > 0) {
+      RobotConstants.leftOutput = RobotConstants.DrivleftTrigger;
+      RobotConstants.rightOutput = RobotConstants.DrivleftTrigger;
+      System.out.println("going from left trigger");
+
+    } else if (RobotConstants.DrivrightTrigger > 0) {
+      RobotConstants.leftOutput = -RobotConstants.DrivrightTrigger;
+      RobotConstants.rightOutput = -RobotConstants.DrivrightTrigger;
+      System.out.println("going from right trigger");
 
     } else {
-      left1.set(RobotConstants.DrivleftStick);
-      right1.set(RobotConstants.DrivrightStick);
+      RobotConstants.leftOutput = Math.abs(RobotConstants.DrivleftStick) * RobotConstants.DrivleftStick;
+      RobotConstants.rightOutput = Math.abs(RobotConstants.DrivrightStick) * RobotConstants.DrivrightStick;
+      System.out.println("going from normal controls");
     }
+
+    left1.set(RobotConstants.leftOutput * RobotConstants.robotAccMaxSpeed);
+    right1.set(RobotConstants.rightOutput * RobotConstants.robotAccMaxSpeed);
   }
   /** This function is called once each time the robot enters test mode. */
   @Override
