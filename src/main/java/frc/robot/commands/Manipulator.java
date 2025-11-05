@@ -13,13 +13,13 @@ public class Manipulator {
     }
 
     /**
-     * 
-     * @param manMotRot
-     * @return <b>linVel<b> (inches)
+     * @apiNote divide by circumference (diameter=4), and multiply by gear ratios (4)
+     * @param LinVel
+     * @return <b>manRot<b> (rot/sec)
      */
-    public static double manRotLinVel(double manMotRot){
-        double wheelRot=manMotRot/4;
-        return wheelRot*(Math.PI*4);
+    public static double LinVeltoManRot(double LinVel){
+        double wheelRot=LinVel/(Math.PI*4);
+        return wheelRot*4;
     }
     
 }

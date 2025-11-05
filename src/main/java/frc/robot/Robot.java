@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.commands.UpdatePeriodic;
 import frc.robot.commands.Elevator;
+import frc.robot.commands.Manipulator;
 import frc.robot.constants.PIDVar;
 import frc.robot.constants.RobotConstants;
 
@@ -26,15 +27,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
-
+ 
 
 public class Robot extends TimedRobot {
 
   //motors
-  public static final SparkMax manShort = new SparkMax(31, MotorType.kBrushless);
-  public static final SparkMax manLong = new SparkMax(32, MotorType.kBrushless);
+  public static final SparkMax manRight = new SparkMax(31, MotorType.kBrushless);
+  public static final SparkMax manLeft = new SparkMax(32, MotorType.kBrushless);
   public static final SparkMax elevatorR = new SparkMax(21, MotorType.kBrushless);
   public static final SparkMax elevatorL = new SparkMax(22, MotorType.kBrushless);
   public static final SparkMax right1 = new SparkMax(11, MotorType.kBrushless);
@@ -43,10 +42,14 @@ public class Robot extends TimedRobot {
   public static final SparkMax left2 = new SparkMax(14, MotorType.kBrushless);
 
   // PID loop
-  public static final SparkClosedLoopController manLongPID=manLong.getClosedLoopController();
+  public static final SparkClosedLoopController manLeftPID=manLeft.getClosedLoopController();
+  public static final SparkClosedLoopController manRightPID=manRight.getClosedLoopController();
+
+
 
   //PID encoders
-  public static final RelativeEncoder manLongEnc=manLong.getEncoder();
+  public static final RelativeEncoder drvLEnc = left1.getEncoder();
+  public static final RelativeEncoder drvREnc = right1.getEncoder();
 
   //sensors
   public static final RelativeEncoder elevatorEnc = elevatorR.getEncoder();
@@ -95,20 +98,20 @@ public class Robot extends TimedRobot {
     elevatorR.configure(configEleR, null, null);
     elevatorL.configure(configEleL, null, null);
 
-    SparkMaxConfig configManShort = new SparkMaxConfig();
-    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
-        .pid(PIDVar.manShortP,
-            PIDVar.manShortI,
-            PIDVar.manShortD,
+    SparkMaxConfig configManRight = new SparkMaxConfig();
+    configManRight.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
+        .pid(PIDVar.manRightP,
+            PIDVar.manRightI,
+            PIDVar.manRightD,
             ClosedLoopSlot.kSlot0);
-    SparkMaxConfig configManLong = new SparkMaxConfig();
-    configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
-        .pid(PIDVar.manLongP,
-            PIDVar.manLongI,
-            PIDVar.manLongD,
+    SparkMaxConfig configManLeft = new SparkMaxConfig();
+    configManLeft.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
+        .pid(PIDVar.manLeftP,
+            PIDVar.manLeftI,
+            PIDVar.manLeftD,
             ClosedLoopSlot.kSlot0);
-    manShort.configure(configManShort, null, null);
-    manLong.configure(configManLong, null, null);
+    manRight.configure(configManRight, null, null);
+    manLeft.configure(configManLeft, null, null);
 
   }
 
@@ -225,23 +228,23 @@ public class Robot extends TimedRobot {
     elevatorR.set(RobotConstants.elevatorOutput); // only time elevator speed actually gets set in the
 
     // MANIPULATOR
-    
+    RobotConstants.manLeftOutput=Math.abs(Manipulator.LinVeltoManRot(Manipulator.drvRotLinVel(drvLEnc.getVelocity()))); //always positive
+    RobotConstants.manRightOutput=Math.abs(Manipulator.LinVeltoManRot(Manipulator.drvRotLinVel(drvREnc.getVelocity()))); //always positive
     if (RobotConstants.OpperarightTrigger > 0) { // intake
-      // manLong.set(RobotConstants.OpperarightTrigger * RobotConstants.manMaxSPD);
-      // manShort.set(RobotConstants.OpperarightTrigger * RobotConstants.manMaxSPD);
-      manLongPID.setReference(0/*calculated value */, ControlType.kVelocity);
+      manLeftPID.setReference(-RobotConstants.manLeftOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
+      manRightPID.setReference(-RobotConstants.manRightOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
 
     } else if (RobotConstants.OpperaleftTrigger > 0) { // outtake
-      manLong.set(-RobotConstants.OpperaleftTrigger * (RobotConstants.manMaxSPD * 1.5));
-      manShort.set(-RobotConstants.OpperaleftTrigger * (RobotConstants.manMaxSPD * 1.5));
+      manLeftPID.setReference(RobotConstants.manLeftOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
+      manRightPID.setReference(RobotConstants.manRightOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
 
     } else if (RobotConstants.OpperabButton) {
-      manLong.set(RobotConstants.manMaxSPD / 2);
-      manShort.set(-RobotConstants.manMaxSPD / 2);
+      manLeftPID.setReference(-(RobotConstants.manLeftOutput/2)*RobotConstants.manMaxSPD,ControlType.kVelocity);
+      manRightPID.setReference(-(RobotConstants.manRightOutput/2)*RobotConstants.manMaxSPD,ControlType.kVelocity);
 
     } else { // manual control
-      manLong.set(Math.abs(RobotConstants.OpperaleftStick) * RobotConstants.OpperaleftStick);
-      manShort.set(Math.abs(RobotConstants.OpperarightStick) * RobotConstants.OpperarightStick);
+      manLeft.set(Math.abs(RobotConstants.OpperaleftStick) * RobotConstants.OpperaleftStick);
+      manRight.set(Math.abs(RobotConstants.OpperarightStick) * RobotConstants.OpperarightStick);
 
     }
 
