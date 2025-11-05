@@ -4,10 +4,16 @@ public class PIDVar {
   // kP
   public static final double elevatorRP = 0.01;
   public static final double elevatorLP = 0.01;
+  public static final double manLongP = 0.01;
+  public static final double manShortP = 0.01;
   // kI
   public static final double elevatorRI = 0; // keep at 0 unless we REALLY NEED it becasue this can cause more problems
   public static final double elevatorLI = 0; // keep at 0 unless we REALLY NEED it becasue this can cause more problems
+  public static final double manLongI = 0; // keep at 0 unless we REALLY NEED it becasue this can cause more problems
+  public static final double manShortI = 0; // keep at 0 unless we REALLY NEED it becasue this can cause more problems
   // kD
   public static final double elevatorRD = 0.01;
   public static final double elevatorLD = 0.01;
+  public static final double manLongD = 0.01;
+  public static final double manShortD = 0.01;
 }

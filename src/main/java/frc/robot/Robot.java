@@ -43,10 +43,10 @@ public class Robot extends TimedRobot {
   public static final SparkMax left2 = new SparkMax(14, MotorType.kBrushless);
 
   // PID loop
-  public static final PIDController elevRpid = new PIDController(PIDVar.elevatorRP, PIDVar.elevatorRI,
-      PIDVar.elevatorRD);
-  // public static final PIDController elevLpid = new
-  // PIDController(PIDVar.elevatorLP, PIDVar.elevatorRI, PIDVar.elevatorRD);
+  public static final SparkClosedLoopController manLongPID=manLong.getClosedLoopController();
+
+  //PID encoders
+  public static final RelativeEncoder manLongEnc=manLong.getEncoder();
 
   //sensors
   public static final RelativeEncoder elevatorEnc = elevatorR.getEncoder();
@@ -65,13 +65,6 @@ public class Robot extends TimedRobot {
   // Timers :(
   public static final Timer drivModeTimer=new Timer();
   public static final Timer autonTimer = new Timer();
-
-  // shuffleboard
-  // public ShuffleboardTab newTabKevin = Shuffleboard.getTab("KevinTabV2");
-  // public GenericEntry cameraRequirement = newTabKevin.add("Camera
-  // Requirements", 0).getEntry();
-  // public GenericEntry elevatorheight = newTabKevin.add("Elevator Height: ",
-  // RobotConstants.elevatorHeight).getEntry();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -96,16 +89,24 @@ public class Robot extends TimedRobot {
     left2.configure(configL2, null, null);
 
     SparkMaxConfig configEleR = new SparkMaxConfig();
-    configEleR.idleMode(IdleMode.kBrake).smartCurrentLimit(50).disableFollowerMode().inverted(false);
+    configEleR.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
     SparkMaxConfig configEleL = new SparkMaxConfig();
-    configEleL.idleMode(IdleMode.kBrake).smartCurrentLimit(50).inverted(false).follow(elevatorR, true);
+    configEleL.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(elevatorR, true);
     elevatorR.configure(configEleR, null, null);
     elevatorL.configure(configEleL, null, null);
 
     SparkMaxConfig configManShort = new SparkMaxConfig();
-    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(60).disableFollowerMode().inverted(true);
+    configManShort.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
+        .pid(PIDVar.manShortP,
+            PIDVar.manShortI,
+            PIDVar.manShortD,
+            ClosedLoopSlot.kSlot0);
     SparkMaxConfig configManLong = new SparkMaxConfig();
-    configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(60).disableFollowerMode().inverted(false);
+    configManLong.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
+        .pid(PIDVar.manLongP,
+            PIDVar.manLongI,
+            PIDVar.manLongD,
+            ClosedLoopSlot.kSlot0);
     manShort.configure(configManShort, null, null);
     manLong.configure(configManLong, null, null);
 
@@ -224,9 +225,11 @@ public class Robot extends TimedRobot {
     elevatorR.set(RobotConstants.elevatorOutput); // only time elevator speed actually gets set in the
 
     // MANIPULATOR
+    
     if (RobotConstants.OpperarightTrigger > 0) { // intake
-      manLong.set(RobotConstants.OpperarightTrigger * RobotConstants.manMaxSPD);
-      manShort.set(RobotConstants.OpperarightTrigger * RobotConstants.manMaxSPD);
+      // manLong.set(RobotConstants.OpperarightTrigger * RobotConstants.manMaxSPD);
+      // manShort.set(RobotConstants.OpperarightTrigger * RobotConstants.manMaxSPD);
+      manLongPID.setReference(0/*calculated value */, ControlType.kVelocity);
 
     } else if (RobotConstants.OpperaleftTrigger > 0) { // outtake
       manLong.set(-RobotConstants.OpperaleftTrigger * (RobotConstants.manMaxSPD * 1.5));
@@ -241,8 +244,6 @@ public class Robot extends TimedRobot {
       manShort.set(Math.abs(RobotConstants.OpperarightStick) * RobotConstants.OpperarightStick);
 
     }
-    System.out.println("Short " + manShort.getOutputCurrent());
-    System.out.println("Long " + manLong.getOutputCurrent());
 
     // DRIVE
     if (drivModeTimer.get() >= 0.1) { // toggle drive mode
