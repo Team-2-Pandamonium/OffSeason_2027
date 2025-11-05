@@ -230,6 +230,13 @@ public class Robot extends TimedRobot {
     // MANIPULATOR
     RobotConstants.manLeftOutput=Math.abs(Manipulator.LinVeltoManRot(Manipulator.drvRotLinVel(drvLEnc.getVelocity()))); //always positive
     RobotConstants.manRightOutput=Math.abs(Manipulator.LinVeltoManRot(Manipulator.drvRotLinVel(drvREnc.getVelocity()))); //always positive
+    if(RobotConstants.manLeftOutput==0){
+      RobotConstants.manLeftOutput=1;
+    }
+    if(RobotConstants.manRightOutput==0){
+      RobotConstants.manRightOutput=1;
+    }
+
     if (RobotConstants.OpperarightTrigger > 0) { // intake
       manLeftPID.setReference(-RobotConstants.manLeftOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
       manRightPID.setReference(-RobotConstants.manRightOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
