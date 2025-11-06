@@ -126,12 +126,64 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (autonTimer.get() <= 5) {
+    if (autonTimer.get() <= 1) {
+      manLeft.set(1);
+      manRight.set(1);
+      right1.set(-RobotConstants.autonSpeed*2.5);
+      left1.set(-RobotConstants.autonSpeed*2.5);
+    } else if (autonTimer.get() <=3 && autonTimer.get() > 1) {
+      right1.set(RobotConstants.autonSpeed);
+      left1.set(-RobotConstants.autonSpeed);
+    } else if (autonTimer.get() <=4 && autonTimer.get() > 3) {
+      right1.set(-RobotConstants.autonSpeed*2.5);
+      left1.set(-RobotConstants.autonSpeed*2.5);
+    } else if (autonTimer.get() <=5 && autonTimer.get() > 4) {
+      elevatorL.set(0.5);
+      elevatorR.set(0.5);
+    } else if (autonTimer.get() <=6 && autonTimer.get() > 5) {
+      right1.set(-RobotConstants.autonSpeed*2.5);
+      left1.set(-RobotConstants.autonSpeed*2.5);
+    } else if (autonTimer.get() <=7 && autonTimer.get() > 6) {
+      manLeft.set(-1);
+      manRight.set(-1);
+    } else if (autonTimer.get() <=7.5 && autonTimer.get() > 7) {
+      right1.set(RobotConstants.autonSpeed*2.5);
+      left1.set(RobotConstants.autonSpeed*2.5);
+      elevatorL.set(-0.5);
+      elevatorR.set(-0.5);
+    } else if (autonTimer.get() <=8 && autonTimer.get() > 7.5) {
+      right1.set(-RobotConstants.autonSpeed);
+      left1.set(RobotConstants.autonSpeed);
+    } else if (autonTimer.get() <=8.5 && autonTimer.get() > 8) {
+      right1.set(-RobotConstants.autonSpeed);
+      left1.set(RobotConstants.autonSpeed);
+      manLeft.set(1);
+      manRight.set(1);
+    } else if (autonTimer.get() <=9 && autonTimer.get() > 8.5) {
+      right1.set(-RobotConstants.autonSpeed*2.5);
+      left1.set(-RobotConstants.autonSpeed*2.5);
+    } else if (autonTimer.get() <=10 && autonTimer.get() > 9) {
+      right1.set(RobotConstants.autonSpeed*2.5);
+      left1.set(RobotConstants.autonSpeed*2.5);
+    } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
+      right1.set(RobotConstants.autonSpeed);
+      left1.set(-RobotConstants.autonSpeed);
+      elevatorL.set(0.5);
+      elevatorR.set(0.5);
+    } else if (autonTimer.get() <=11 && autonTimer.get() > 10.5) {
+      right1.set(RobotConstants.autonSpeed);
+      left1.set(-RobotConstants.autonSpeed);
+    } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
       right1.set(-RobotConstants.autonSpeed);
       left1.set(-RobotConstants.autonSpeed);
-    } else {
-      right1.set(0);
-      left1.set(0);
+    } else if (autonTimer.get() <=11.5 && autonTimer.get() > 10.5) {
+      elevatorL.set(0.5);
+      elevatorR.set(0.5);
+      right1.set(-RobotConstants.autonSpeed);
+      left1.set(-RobotConstants.autonSpeed);
+    } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
+      manLeft.set(-1);
+      manRight.set(-1);
     }
   }
 

@@ -42,4 +42,4 @@ manipulator
 auton
     -place cube on shelf
 
-Code is like women, make it happy and it won't yell at you in red lines
+Code is like people (used to be women but thats sexist), make it happy and it won't yell at you in red lines
