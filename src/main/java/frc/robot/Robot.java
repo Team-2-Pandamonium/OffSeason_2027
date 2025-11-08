@@ -127,60 +127,61 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     if (autonTimer.get() <= 1) {
+      elevatorEnc.setPosition(0);
+      Elevator.reset0(true);
       manLeft.set(1);
       manRight.set(1);
-      right1.set(-RobotConstants.autonSpeed*2.5);
-      left1.set(-RobotConstants.autonSpeed*2.5);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
     } else if (autonTimer.get() <=3 && autonTimer.get() > 1) {
-      right1.set(RobotConstants.autonSpeed);
-      left1.set(-RobotConstants.autonSpeed);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
+      // seconds: 1 is because it's unit speed for 90 degrees in 1 second, divided by 2 from the function outside of it
     } else if (autonTimer.get() <=4 && autonTimer.get() > 3) {
-      right1.set(-RobotConstants.autonSpeed*2.5);
-      left1.set(-RobotConstants.autonSpeed*2.5);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
     } else if (autonTimer.get() <=5 && autonTimer.get() > 4) {
-      elevatorL.set(0.5);
-      elevatorR.set(0.5);
+      RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
+          / (RobotConstants.elevatorMaxRot));
     } else if (autonTimer.get() <=6 && autonTimer.get() > 5) {
-      right1.set(-RobotConstants.autonSpeed*2.5);
-      left1.set(-RobotConstants.autonSpeed*2.5);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
     } else if (autonTimer.get() <=7 && autonTimer.get() > 6) {
       manLeft.set(-1);
       manRight.set(-1);
     } else if (autonTimer.get() <=7.5 && autonTimer.get() > 7) {
-      right1.set(RobotConstants.autonSpeed*2.5);
-      left1.set(RobotConstants.autonSpeed*2.5);
-      elevatorL.set(-0.5);
-      elevatorR.set(-0.5);
+      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      RobotConstants.elevatorOutput = (Elevator.CalcDist(0, RobotConstants.elevatorRotHeight)
+          / (RobotConstants.elevatorMaxRot));
     } else if (autonTimer.get() <=8 && autonTimer.get() > 7.5) {
-      right1.set(-RobotConstants.autonSpeed);
-      left1.set(RobotConstants.autonSpeed);
+      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
     } else if (autonTimer.get() <=8.5 && autonTimer.get() > 8) {
-      right1.set(-RobotConstants.autonSpeed);
-      left1.set(RobotConstants.autonSpeed);
+      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
       manLeft.set(1);
       manRight.set(1);
     } else if (autonTimer.get() <=9 && autonTimer.get() > 8.5) {
-      right1.set(-RobotConstants.autonSpeed*2.5);
-      left1.set(-RobotConstants.autonSpeed*2.5);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
     } else if (autonTimer.get() <=10 && autonTimer.get() > 9) {
-      right1.set(RobotConstants.autonSpeed*2.5);
-      left1.set(RobotConstants.autonSpeed*2.5);
+      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 1));
     } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
-      right1.set(RobotConstants.autonSpeed);
-      left1.set(-RobotConstants.autonSpeed);
-      elevatorL.set(0.5);
-      elevatorR.set(0.5);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
     } else if (autonTimer.get() <=11 && autonTimer.get() > 10.5) {
-      right1.set(RobotConstants.autonSpeed);
-      left1.set(-RobotConstants.autonSpeed);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
     } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
-      right1.set(-RobotConstants.autonSpeed);
-      left1.set(-RobotConstants.autonSpeed);
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
     } else if (autonTimer.get() <=11.5 && autonTimer.get() > 10.5) {
-      elevatorL.set(0.5);
-      elevatorR.set(0.5);
-      right1.set(-RobotConstants.autonSpeed);
-      left1.set(-RobotConstants.autonSpeed);
+      RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
+          / (RobotConstants.elevatorMaxRot));
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
     } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
       manLeft.set(-1);
       manRight.set(-1);
@@ -289,6 +290,17 @@ public class Robot extends TimedRobot {
     }
     if(RobotConstants.manRightOutput==0){
       RobotConstants.manRightOutput=1;
+    }
+
+    if(RobotConstants.manLeftOutput<=0.1 && RobotConstants.manLeftOutput>=0){
+      RobotConstants.manLeftOutput=0.10;
+    } else if (RobotConstants.manLeftOutput>=-0.1 && RobotConstants.manLeftOutput<=0) {
+      RobotConstants.manLeftOutput=-0.10;
+    }
+    if(RobotConstants.manRightOutput<=0.1 && RobotConstants.manRightOutput>=0){
+      RobotConstants.manRightOutput=0.10;
+    } else if (RobotConstants.manLeftOutput>=-0.1 && RobotConstants.manLeftOutput<=0) {
+      RobotConstants.manRightOutput=-0.10;
     }
     
     */
