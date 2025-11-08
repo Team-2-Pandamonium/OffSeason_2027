@@ -21,15 +21,20 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
- 
+import edu.wpi.first.wpilibj.SPI.Port;
+
+import com.kauailabs.navx.frc.AHRS;
 
 public class Robot extends TimedRobot {
+  //gyroscope
+  public static final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
   //motors
   public static final SparkMax manRight = new SparkMax(31, MotorType.kBrushless);
@@ -76,6 +81,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    //Navx
+    gyro.reset();
+  
     //SparkMaxConfig
     SparkMaxConfig configR1 = new SparkMaxConfig();
     configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
@@ -127,64 +135,144 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     if (autonTimer.get() <= 1) {
-      elevatorEnc.setPosition(0);
-      Elevator.reset0(true);
-      manLeft.set(1);
-      manRight.set(1);
-      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-    } else if (autonTimer.get() <=3 && autonTimer.get() > 1) {
-      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
-      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
-      // seconds: 1 is because it's unit speed for 90 degrees in 1 second, divided by 2 from the function outside of it
-    } else if (autonTimer.get() <=4 && autonTimer.get() > 3) {
-      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-    } else if (autonTimer.get() <=5 && autonTimer.get() > 4) {
-      RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
-          / (RobotConstants.elevatorMaxRot));
-    } else if (autonTimer.get() <=6 && autonTimer.get() > 5) {
-      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-    } else if (autonTimer.get() <=7 && autonTimer.get() > 6) {
-      manLeft.set(-1);
-      manRight.set(-1);
-    } else if (autonTimer.get() <=7.5 && autonTimer.get() > 7) {
-      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
-      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
+
+      //elevator to bottom
       RobotConstants.elevatorOutput = (Elevator.CalcDist(0, RobotConstants.elevatorRotHeight)
           / (RobotConstants.elevatorMaxRot));
-    } else if (autonTimer.get() <=8 && autonTimer.get() > 7.5) {
-      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
-      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
-    } else if (autonTimer.get() <=8.5 && autonTimer.get() > 8) {
-      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
-      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      elevatorEnc.setPosition(0);
+      Elevator.reset0(true);
+
+      //manipulator intake
       manLeft.set(1);
       manRight.set(1);
-    } else if (autonTimer.get() <=9 && autonTimer.get() > 8.5) {
-      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
-      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
-    } else if (autonTimer.get() <=10 && autonTimer.get() > 9) {
-      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 1));
-      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 1));
-    } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
-      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
-      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
-    } else if (autonTimer.get() <=11 && autonTimer.get() > 10.5) {
-      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
-      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
-    } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
+
+      //go 24 inches (2ft) forward in 1 sec
       drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
       drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-    } else if (autonTimer.get() <=11.5 && autonTimer.get() > 10.5) {
+
+    } else if (autonTimer.get() <=3 && autonTimer.get() > 1) {
+
+        //turn for 90 degrees left, the direction of the shelf, if u overshoot while turning, turn the opposite direction until it's perfect
+        if (gyro.getAngle()<90) {
+          drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
+          drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
+        } else if (gyro.getAngle()>90) {
+          drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
+          drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 2));
+        }
+        // seconds: 1 is because it's unit speed for 90 degrees in 1 second, divided by 2 from the function outside of it
+
+    } else if (autonTimer.get() <=4 && autonTimer.get() > 3) {
+
+      //go forward for 24 inches (2ft) in 1 sec
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
+
+    } else if (autonTimer.get() <=5 && autonTimer.get() > 4) {
+
+      //raise elevator to shelf 1
       RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
           / (RobotConstants.elevatorMaxRot));
+
+    } else if (autonTimer.get() <=6 && autonTimer.get() > 5) {
+
+      //go forward another 24 inches (2 ft), hoping that puts the manipulator inside the level 1 shelf
       drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
       drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 1));
-    } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
+
+    } else if (autonTimer.get() <=7 && autonTimer.get() > 6) {
+
+      //outake (the preload, assuming the manipulator is inside the level 1 shelf)
       manLeft.set(-1);
       manRight.set(-1);
+
+    } else if (autonTimer.get() <=7.5 && autonTimer.get() > 7) {
+
+      //go backwards 24 inches (2 ft)
+      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
+
+      // go to elevator level 0
+      RobotConstants.elevatorOutput = (Elevator.CalcDist(0, RobotConstants.elevatorRotHeight)
+          / (RobotConstants.elevatorMaxRot));
+
+    } else if (autonTimer.get() <=8 && autonTimer.get() > 7.5) {
+
+      //turn back to original direction, if you overshoot whilst turning, turn the opposite direction until perfect
+      if (gyro.getAngle()>0){
+        drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+        drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      } else if (gyro.getAngle()<0) {
+        drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+        drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      }
+
+    } else if (autonTimer.get() <=8.5 && autonTimer.get() > 8) {
+
+      //turn back to original direction, if you overshoot whilst turning, turn the opposite direction until perfect
+      if (gyro.getAngle()>0){
+        drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+        drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      } else if (gyro.getAngle()<0) {
+        drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+        drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 1));
+      }
+
+      //start intaking with manipulator once again
+      manLeft.set(1);
+      manRight.set(1);
+
+    } else if (autonTimer.get() <=9 && autonTimer.get() > 8.5) {
+
+      // go forward (hopefully towards the blocks in the middle, and hope to intake them) 24 inches (2 ft)
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
+
+    } else if (autonTimer.get() <=10 && autonTimer.get() > 9) {
+
+      // assuming a single block has been intaked by the manipulator, go backwards 24 inches (2 ft)
+      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 1));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 1));
+
+    } else if (autonTimer.get() <=10.5 && autonTimer.get() > 10) {
+
+      //turn back towards the shelf, if you overshoot whilst turning, turn in the opposite direction until
+      if (gyro.getAngle()<90) {
+        drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 0.5));
+        drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 0.5));
+      } else if (gyro.getAngle()>90) {
+        drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 0.5));
+        drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(Manipulator.degAndSecsToDrvSpeed(90, 1), 0.5));
+      }
+
+    } else if (autonTimer.get() <=11 && autonTimer.get() > 10.5) {
+
+      // facing the shelf, go forward 24 inches (2 ft)
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
+
+    } else if (autonTimer.get() <=11.5 && autonTimer.get() > 11) {
+
+      // raise elevator level to 1
+      RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
+          / (RobotConstants.elevatorMaxRot));
+
+      //move forward (hopefully to the shelf, so the manipulator is inside the shelf) 24 inches (2 ft)
+      drvREnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      drvLEnc.setPosition(-Manipulator.linVelToDrvRotInSecs(24, 0.5));
+
+    } else if (autonTimer.get() <=12 && autonTimer.get() > 11.5) {
+
+      // outake the manipulator, which is hopefully in the shelf 
+        manLeft.set(-1);
+        manRight.set(-1);
+
+    } else if (autonTimer.get() <= 12.5 && autonTimer.get() > 12) {
+
+      // go backwards for 24 inches (2 ft)
+      drvREnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
+      drvLEnc.setPosition(Manipulator.linVelToDrvRotInSecs(24, 0.5));
+    } else {
     }
   }
 
