@@ -27,7 +27,8 @@ elastic documentation
     - drivemode
 elevator trajectory planning instead of pid (LOW PRIORITY)
 manipulator
-    - The indented below may not be needed anymore, but needs to be checked by daniel or someone
+    make curve for % to rpm so dont ahve to do pid (10,25,50,75,100)
+		- The indented below may not be needed anymore, but needs to be checked by daniel or someone
         - Encoder value either drivebase motors,
         - both sides indivitually,
         - encoder value of intake,
