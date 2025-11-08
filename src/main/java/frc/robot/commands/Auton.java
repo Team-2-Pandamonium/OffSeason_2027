@@ -15,6 +15,13 @@ public class Auton {
         return wheelRot * 8.46;
     }
 
+    /**
+     * 
+     * @param rot
+     * @throws myCat
+     * @throws urMom
+     * @return true, also makes the drivetrain move that many rotations on both motors
+     */
     public static boolean goFwd(double rot) {
         double encLOffset = Robot.drvLEnc.getPosition();
         double encROffset = Robot.drvREnc.getPosition();

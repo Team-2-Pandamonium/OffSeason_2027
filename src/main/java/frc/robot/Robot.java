@@ -133,12 +133,14 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     UpdatePeriodic.updateSensorValues();
     if (autonConst.strt) {
+      // move 1 ft (12 in)
       autonConst.movdStrt = Auton.goFwd(Auton.distToRot(12));
     }
 
 
     if (autonConst.movdStrt) {
       autonConst.strt = false;
+      // turn to the shelf, 90 degrees
       if (gyro.getAngle() < 90) { // left auton
         right1.set(-RobotConstants.autonSpeed);
         left1.set(RobotConstants.autonSpeed);
@@ -150,12 +152,12 @@ public class Robot extends TimedRobot {
       }
     }
 
-    // go x in forwards
+    // go 12 in (1 ft) forwards
     if (autonConst.trnd) {
       autonConst.movToshelf = Auton.goFwd(Auton.distToRot(12));
     }
 
-      // go to x level on elevator
+      // go to level 1 on elevator
       if (autonConst.movToshelf) {
         autonConst.trnd = false;
         elevatorR.set(RobotConstants.elevatorOutput);
@@ -173,7 +175,7 @@ public class Robot extends TimedRobot {
 
       // elevatorR.set(RobotConstants.elevatorOutput);
 
-      // if the elevator is at x level, then go forward 3 inches
+      // if the elevator is at level 1, then go forward 3 inches, into the shelf
       if (Math.abs(Elevator.CalcDist(1, RobotConstants.elevatorRotHeight) - elevatorEnc.getPosition()) <= 0.5) {
         autonConst.movToshelf = false;
         autonConst.push = Auton.goFwd(Auton.distToRot(3));
@@ -187,22 +189,26 @@ public class Robot extends TimedRobot {
       }
 
       if (autonTimer.get() > 0.5) {
+        // wait 0.5 secs to outake fully
         autonConst.outTaked = true;
         autonConst.push = false;
       }
 
       if (autonConst.outTaked) {
+        //move backwards 6 inches (0.5 ft)
         autonConst.outTaked = false;
         autonConst.backedUp = Auton.goFwd(Auton.distToRot(-6));
       }
       if (autonConst.backedUp) {
+        // elevator bottom
         Elevator.reset0(true);
       }
 
       if (elevatorEnc.getPosition() == 0 && autonConst.backedUp) {
+        // final condition, checking if elevator at bottom and backedUp is true, then prints finished
         autonConst.backedUp = false;
-        for (int i = -1; i < 100; i++) {
-          System.out.println("auton finished");
+        for (int i = -1; i < 67; i++) {
+          System.out.println("auton finished x"+Integer.toString(i));
         }
       }
 
