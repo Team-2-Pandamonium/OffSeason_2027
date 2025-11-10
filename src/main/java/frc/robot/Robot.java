@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
 
   //Shuffleboard
   private ShuffleboardTab tab = Shuffleboard.getTab("Main");
-  public GenericEntry elevatorSetP = tab.addPersistent("ElevatorP",.01).getEntry();
+  public GenericEntry elevatorSetP = tab.addPersistent("ElevatorP",.001).getEntry();
   public GenericEntry elevatorSetI = tab.addPersistent("ElevatorI",0).getEntry();
   public GenericEntry elevatorSetD = tab.addPersistent("ElevatorD",.001).getEntry();
   public SimpleWidget elevatorPosition = tab.add("Elevator Position", elevatorR.getEncoder());
@@ -357,7 +357,6 @@ public class Robot extends TimedRobot {
       RobotConstants.elevatorOutput = 0.03;
       RobotConstants.PIDMode = false;
     }
-
 
     // not allowed to go over max speed
     if (Math.abs(RobotConstants.elevatorOutput) > RobotConstants.elevatorMaxSpeed) {
