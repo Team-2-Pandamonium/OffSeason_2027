@@ -5,7 +5,7 @@ public class RobotConstants {
     // public static final double leftDrift = 1; // at least one drift should be 1,
     // both if drivebase if fine.
     // public static final double rightDrift = 1;
-    public static final double autonSpeed = 0.1;
+    public static final double autonSpeed = 0.25;
     public static final double Drivdeadzone = .03;
     public static final double Oppdeadzone = .07;
 

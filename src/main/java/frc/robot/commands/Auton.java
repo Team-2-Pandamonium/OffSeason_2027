@@ -20,7 +20,7 @@ public class Auton {
      * @param rot
      * @throws myCat
      * @throws urMom
-     * @return true, also makes the drivetrain move that many rotations on both motors
+     * @return true, also makes the drivetrain move that many rotations on both motors, going forward/backward
      */
     public static boolean goFwd(double rot) {
         double encLOffset = Robot.drvLEnc.getPosition();

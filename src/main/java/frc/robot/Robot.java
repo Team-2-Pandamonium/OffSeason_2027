@@ -39,10 +39,10 @@ public class Robot extends TimedRobot {
   public static final SparkMax manLeft = new SparkMax(32, MotorType.kBrushless);
   public static final SparkMax elevatorR = new SparkMax(21, MotorType.kBrushless);
   public static final SparkMax elevatorL = new SparkMax(22, MotorType.kBrushless);
-  public static final SparkMax right1 = new SparkMax(11, MotorType.kBrushless);
-  public static final SparkMax right2 = new SparkMax(12, MotorType.kBrushless);
-  public static final SparkMax left1 = new SparkMax(13, MotorType.kBrushless);
-  public static final SparkMax left2 = new SparkMax(14, MotorType.kBrushless);
+  public static SparkMax right1 = new SparkMax(11, MotorType.kBrushless);
+  public static SparkMax right2 = new SparkMax(12, MotorType.kBrushless);
+  public static SparkMax left1 = new SparkMax(13, MotorType.kBrushless);
+  public static SparkMax left2 = new SparkMax(14, MotorType.kBrushless);
 
   // PID loop
   public static final SparkClosedLoopController manLeftPID=manLeft.getClosedLoopController();
@@ -64,7 +64,6 @@ public class Robot extends TimedRobot {
 
   // camera
   public static final UsbCamera camera = CameraServer.startAutomaticCapture();
-
   // controllers
   public static final PS5Controller DRIV_CONTROLLER = new PS5Controller(0);
   public static final XboxController OPPERA_CONTROLLER = new XboxController(1);
@@ -126,6 +125,41 @@ public class Robot extends TimedRobot {
     gyro.reset();
     // starting and reseting the timer used in auton
     autonTimer.reset();
+    // pid (right)
+    SparkMaxConfig configR1 = new SparkMaxConfig();
+    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
+    .pid(PIDVar.drvRightP,
+        PIDVar.drvRightI,
+        PIDVar.drvRightD,
+        ClosedLoopSlot.kSlot0);
+    SparkMaxConfig configR2 = new SparkMaxConfig();
+
+    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1).closedLoop
+    .pid(PIDVar.autonLeftP,
+        PIDVar.autonLeftI,
+        PIDVar.autonLeftD,
+        ClosedLoopSlot.kSlot0);
+
+    right1.configure(configR1, null, null);
+    right2.configure(configR2, null, null);
+
+    // pid (left)
+    SparkMaxConfig configL1 = new SparkMaxConfig();
+    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
+    .pid(PIDVar.autonLeftP,
+        PIDVar.autonLeftI,
+        PIDVar.autonLeftD,
+        ClosedLoopSlot.kSlot0);
+
+    SparkMaxConfig configL2 = new SparkMaxConfig();
+    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1).closedLoop
+    .pid(PIDVar.autonLeftP,
+        PIDVar.autonLeftI,
+        PIDVar.autonLeftD,
+        ClosedLoopSlot.kSlot0);
+
+    left1.configure(configL1, null, null);
+    left2.configure(configL2, null, null);
   }
 
   /** This function is called periodically during autonomous. */
@@ -226,6 +260,21 @@ public class Robot extends TimedRobot {
     // elevatorEnc.setPosition(0);
     drivModeTimer.start();
     drivModeTimer.reset();
+    //unpid the pid (right)
+    SparkMaxConfig configR1 = new SparkMaxConfig();
+    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
+    SparkMaxConfig configR2 = new SparkMaxConfig();
+    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1);
+    right1.configure(configR1, null, null);
+    right2.configure(configR2, null, null);
+
+    //unpid the pid (left)
+    SparkMaxConfig configL1 = new SparkMaxConfig();
+    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
+    SparkMaxConfig configL2 = new SparkMaxConfig();
+    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1);
+    left1.configure(configL1, null, null);
+    left2.configure(configL2, null, null);
   }
 
   /** This function is called periodically during teleoperated mode. */
