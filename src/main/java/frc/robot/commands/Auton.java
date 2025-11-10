@@ -28,11 +28,11 @@ public class Auton {
         while (Math.abs(Robot.drvLEnc.getPosition()-encLOffset) < Math.abs(rot)
                 && Math.abs(Robot.drvREnc.getPosition()-encROffset) < Math.abs(rot)) {
             if (rot > 0) {
-                Robot.left1.set(-RobotConstants.autonSpeed);
-                Robot.right1.set(-RobotConstants.autonSpeed);
+                Robot.left1.set(-RobotConstants.autonSpeed * ((Math.abs(Robot.drvLEnc.getPosition()-encLOffset) - Math.abs(rot))/((Math.abs(Robot.drvLEnc.getPosition()-encLOffset) - Math.abs(rot))+1)));
+                Robot.right1.set(-RobotConstants.autonSpeed * ((Math.abs(Robot.drvREnc.getPosition()-encROffset) - Math.abs(rot))/((Math.abs(Robot.drvREnc.getPosition()-encROffset) - Math.abs(rot))+1)));
             } else {
-                Robot.left1.set(RobotConstants.autonSpeed);
-                Robot.right1.set(RobotConstants.autonSpeed);
+                Robot.left1.set(RobotConstants.autonSpeed * ((Math.abs(Robot.drvLEnc.getPosition()-encLOffset) - Math.abs(rot))/((Math.abs(Robot.drvLEnc.getPosition()-encLOffset) - Math.abs(rot))+1)));
+                Robot.right1.set(RobotConstants.autonSpeed * ((Math.abs(Robot.drvREnc.getPosition()-encROffset) - Math.abs(rot))/((Math.abs(Robot.drvREnc.getPosition()-encROffset) - Math.abs(rot))+1)));
             }
         }
         Robot.left1.set(0);
