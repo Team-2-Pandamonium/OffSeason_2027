@@ -20,6 +20,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.SPI;
@@ -69,6 +70,9 @@ public class Robot extends TimedRobot {
   public static final Timer drivModeTimer=new Timer();
   public static final Timer autonTimer = new Timer();
 
+  //Shuffleboard
+  private ShuffleboardTab tab = Shuffleboard.getTab("Main");
+  public GenericEntry elevatorRP = tab.add("ElevatorP",1).getEntry();
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -93,9 +97,17 @@ public class Robot extends TimedRobot {
     left2.configure(configL2, null, null);
 
     SparkMaxConfig configEleR = new SparkMaxConfig();
-    configEleR.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
+    configEleR.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
+    .pid(PIDVar.elevatorRP,
+        PIDVar.elevatorRI,
+        PIDVar.elevatorRD,
+        ClosedLoopSlot.kSlot0);
     SparkMaxConfig configEleL = new SparkMaxConfig();
-    configEleL.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(elevatorR, true);
+    configEleL.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(elevatorR, true).closedLoop
+    .pid(PIDVar.elevatorLP,
+        PIDVar.elevatorLI,
+        PIDVar.elevatorLD,
+        ClosedLoopSlot.kSlot0);
     elevatorR.configure(configEleR, null, null);
     elevatorL.configure(configEleL, null, null);
 
@@ -282,18 +294,21 @@ public class Robot extends TimedRobot {
 
 
 
-    // AXY Elevator movment
+    // ANY Elevator movment
     if (RobotConstants.OpperaaButton) { // lvl1
       RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
           / (RobotConstants.elevatorMaxRot));
+          RobotConstants.PIDMode = true;
 
     } else if (RobotConstants.OpperayButton) { // lvl3
       RobotConstants.elevatorOutput = (Elevator.CalcDist(3, RobotConstants.elevatorRotHeight)
           / (RobotConstants.elevatorMaxRot));
+          RobotConstants.PIDMode = true;
 
     } else if (RobotConstants.OpperaxButton) { // lvl2
       RobotConstants.elevatorOutput = (Elevator.CalcDist(2, RobotConstants.elevatorRotHeight)
           / (RobotConstants.elevatorMaxRot));
+          RobotConstants.PIDMode = true;
 
     } else if (RobotConstants.OpperaDPadUp) { // DPAD movment (manual)
 
@@ -302,6 +317,8 @@ public class Robot extends TimedRobot {
       } else {
         RobotConstants.elevatorOutput = (0.3);
       }
+      RobotConstants.PIDMode = false;
+
     } else if (RobotConstants.OpperaDPadUpRight) {
 
       if (RobotConstants.elevatorRotHeight > RobotConstants.maxHgtSlowThrthHld) {
@@ -310,14 +327,20 @@ public class Robot extends TimedRobot {
       } else {
         RobotConstants.elevatorOutput = 0.1;
       }
+      RobotConstants.PIDMode = false;
+
     } else if (RobotConstants.OpperaDPadDown) {
       RobotConstants.elevatorOutput = -0.3;
+      RobotConstants.PIDMode = false;
+
 
     } else if (RobotConstants.OpperaDPadDownRight) {
       RobotConstants.elevatorOutput = -0.1;
+      RobotConstants.PIDMode = false;
 
     } else {
       RobotConstants.elevatorOutput = 0.03;
+      RobotConstants.PIDMode = false;
     }
 
 
@@ -343,6 +366,9 @@ public class Robot extends TimedRobot {
       System.err.println("ERROR: TRYING TO UNDER EXTEND ELEVATOR, setting elevator speed to 0");
     }
 
+    if ((RobotConstants.PIDMode)){
+      elevatorR.setReference(RobotConstants.elevatorOutput, ControlType.kPosition, feedfoward);
+    }
     elevatorR.set(RobotConstants.elevatorOutput); // one of the only times the elevator speed actually gets set in the
                                                   // code
 
