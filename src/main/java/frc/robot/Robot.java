@@ -144,36 +144,40 @@ public class Robot extends TimedRobot {
     autonTimer.reset();
     // pid (right)
     SparkMaxConfig configR1 = new SparkMaxConfig();
-    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
-    .pid(PIDVar.drvRightP,
-        PIDVar.drvRightI,
-        PIDVar.drvRightD,
-        ClosedLoopSlot.kSlot0);
+    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
+    // .closedLoop
+    // .pid(PIDVar.drvRightP,
+    //     PIDVar.drvRightI,
+    //     PIDVar.drvRightD,
+    //     ClosedLoopSlot.kSlot0);
     SparkMaxConfig configR2 = new SparkMaxConfig();
 
-    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1).closedLoop
-    .pid(PIDVar.autonLeftP,
-        PIDVar.autonLeftI,
-        PIDVar.autonLeftD,
-        ClosedLoopSlot.kSlot0);
+    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1);
+    // .closedLoop
+    // .pid(PIDVar.autonLeftP,
+    //     PIDVar.autonLeftI,
+    //     PIDVar.autonLeftD,
+    //     ClosedLoopSlot.kSlot0);
 
     right1.configure(configR1, null, null);
     right2.configure(configR2, null, null);
 
     // pid (left)
     SparkMaxConfig configL1 = new SparkMaxConfig();
-    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true).closedLoop
-    .pid(PIDVar.autonLeftP,
-        PIDVar.autonLeftI,
-        PIDVar.autonLeftD,
-        ClosedLoopSlot.kSlot0);
+    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
+    // .closedLoop
+    // .pid(PIDVar.autonLeftP,
+    //     PIDVar.autonLeftI,
+    //     PIDVar.autonLeftD,
+    //     ClosedLoopSlot.kSlot0);
 
     SparkMaxConfig configL2 = new SparkMaxConfig();
-    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1).closedLoop
-    .pid(PIDVar.autonLeftP,
-        PIDVar.autonLeftI,
-        PIDVar.autonLeftD,
-        ClosedLoopSlot.kSlot0);
+    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1);
+    // .closedLoop
+    // .pid(PIDVar.autonLeftP,
+    //     PIDVar.autonLeftI,
+    //     PIDVar.autonLeftD,
+    //     ClosedLoopSlot.kSlot0);
 
     left1.configure(configL1, null, null);
     left2.configure(configL2, null, null);
