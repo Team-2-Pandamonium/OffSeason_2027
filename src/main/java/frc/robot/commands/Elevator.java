@@ -190,12 +190,12 @@ public class Elevator extends SubsystemBase{
    * 
    * @param level the level for what level you want the elevator to be
    * @param currentHeight in rotations
-   * @return
+   * @return elevator does shit
    */
-  public Command elevatorSetFancy() {
+  public Command elevatorSetFancy(int level) {
     // Run shooter wheel at the desired speed using a PID controller and feedforward.
     return run(() -> {
-      double shooterSpeed = InToRot(CalcDist(RobotConstants.level, RobotConstants.elevatorRotHeight))/0.75;
+      double shooterSpeed = InToRot(CalcDist(level, RobotConstants.elevatorRotHeight))/0.75;
           Robot.elevatorR.setVoltage(
               m_shooterFeedback.calculate(Robot.elevatorEnc.getVelocity(), shooterSpeed)
                   + m_shooterFeedforward.calculate(shooterSpeed));

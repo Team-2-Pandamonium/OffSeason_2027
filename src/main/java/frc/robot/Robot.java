@@ -97,8 +97,8 @@ public class Robot extends TimedRobot {
   // camera
   public static final UsbCamera camera = CameraServer.startAutomaticCapture();
   // controllers
-  public static final CommandPS5Controller DRIV_CONTROLLER = new CommandPS5Controller(0);
-  public static final CommandXboxController OPPERA_CONTROLLER = new CommandXboxController(1);
+  public static final PS5Controller DRIV_CONTROLLER = new PS5Controller(0);
+  public static final XboxController OPPERA_CONTROLLER = new XboxController(1);
 
   // Timers :(
   public static final Timer drivModeTimer=new Timer();
@@ -336,7 +336,7 @@ public class Robot extends TimedRobot {
     left1.configure(configL1, null, null);
     left2.configure(configL2, null, null);
   }
-
+  
   /** This function is called periodically during teleoperated mode. */
   @Override
   public void teleopPeriodic() {
@@ -350,24 +350,26 @@ public class Robot extends TimedRobot {
       // System.out.println("At bottom, reseting ENC zero");
     }
 
-
+    
 
     // ANY Elevator movment
     // OPPERA_CONTROLLER.a().whileTrue(Elevator.elevatorSetFancy());
     if (RobotConstants.OpperaaButton) { // lvl1
-      RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
-          / (RobotConstants.elevatorMaxRot));
-          RobotConstants.PIDMode = true;
+      // RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
+      //     / (RobotConstants.elevatorMaxRot));
+        new Elevator().elevatorSetFancy(1).schedule();
   
     } else if (RobotConstants.OpperayButton) { // lvl3
-      RobotConstants.elevatorOutput = (Elevator.CalcDist(3, RobotConstants.elevatorRotHeight)
-          / (RobotConstants.elevatorMaxRot));
-          RobotConstants.PIDMode = true;
+      // RobotConstants.elevatorOutput = (Elevator.CalcDist(3, RobotConstants.elevatorRotHeight)
+      //     / (RobotConstants.elevatorMaxRot));
+      //     RobotConstants.PIDMode = true;
+        new Elevator().elevatorSetFancy(3).schedule();
 
     } else if (RobotConstants.OpperaxButton) { // lvl2
-      RobotConstants.elevatorOutput = (Elevator.CalcDist(2, RobotConstants.elevatorRotHeight)
-          / (RobotConstants.elevatorMaxRot));
-          RobotConstants.PIDMode = true;
+      // RobotConstants.elevatorOutput = (Elevator.CalcDist(2, RobotConstants.elevatorRotHeight)
+      //     / (RobotConstants.elevatorMaxRot));
+      //     RobotConstants.PIDMode = true;
+        new Elevator().elevatorSetFancy(2).schedule();
 
     } else if (RobotConstants.OpperaDPadUp) { // DPAD movment (manual)
 
