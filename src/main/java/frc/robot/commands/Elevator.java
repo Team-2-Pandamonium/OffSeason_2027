@@ -1,10 +1,48 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.units.measure.MutCurrent;
+import edu.wpi.first.units.measure.MutVoltage;
+import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Robot;
 import frc.robot.constants.RobotConstants;
 
-public class Elevator {
-  
+import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
+
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
+public class Elevator extends SubsystemBase{
+
+  public static final PIDController pidController = new PIDController(0, 0, 0);
+  public static final SimpleMotorFeedforward ffController = new SimpleMotorFeedforward(0, 0);
+  //Value holders, so the code doesn't cream in red lines
+  private static final MutAngularVelocity m_velocity = RadiansPerSecond.mutable(0);
+  private static final MutAngle m_angle = Radians.mutable(0);
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+
+  private final PIDController m_shooterFeedback = new PIDController(0.01, 0, 0);
+  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(1, 1, 1);
+
   /**
    * This calculates how much the elevator has to move to get to the desired level
    * 
@@ -74,8 +112,101 @@ public class Elevator {
   }
   if (!RobotConstants.bottEndstop) {
     Robot.elevatorEnc.setPosition(0);
+  }  
   }
+/**
+ * Returns voltage from PID and FF calculations.
+ * @param curVelocity current velocity of the motor
+ * @param tarVelocity target velocity of the motor
+ * @return
+ */
+  public static double getCalcVelocity(double curVelocity, double tarVelocity){
+    return pidController.calculate(curVelocity, tarVelocity) + ffController.calculate(tarVelocity);
+  }
+
+  public static double getCalcPos(double curPos, double tarPos){
+    double maxPosRate = 5;
+    double posError = tarPos - curPos;
+
+    double targetSpeed = maxPosRate * (posError > 0 ? 1 : -1);
+
+    double rampDownSpeed = posError/(2 * maxPosRate);
+
+    if (Math.abs(rampDownSpeed) < Math.abs(targetSpeed)) targetSpeed = rampDownSpeed;
+    
+    return targetSpeed;
   
   }
+
+  private final SysIdRoutine m_sysIdRoutine =
+      new SysIdRoutine(
+          // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+          new SysIdRoutine.Config(),
+          new SysIdRoutine.Mechanism(
+              // Tell SysId how to plumb the driving voltage to the motor(s).
+              Robot.elevatorR::setVoltage,
+              // Tell SysId how to record a frame of data for each motor on the mechanism being
+              // characterized.
+              log -> {
+                // Record a frame for the shooter motor.
+                log.motor("ElevatorR")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            Robot.elevatorR.get() * RobotController.getBatteryVoltage(), Volts))
+                    .angularPosition(m_angle.mut_replace(Robot.elevatorEnc.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_velocity.mut_replace(Robot.elevatorEnc.getVelocity(), RotationsPerSecond));
+
+                log.motor("ElevatorL")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            Robot.elevatorL.get() * RobotController.getBatteryVoltage(), Volts))
+                    .angularPosition(m_angle.mut_replace(Robot.elevatorEnc.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_velocity.mut_replace(-Robot.elevatorEnc.getVelocity(), RotationsPerSecond));
+                
+                log.motor("DrivetrainR")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            -Robot.right1.get() * RobotController.getBatteryVoltage(), Volts))
+                    .angularPosition(m_angle.mut_replace(Robot.drvREnc.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_velocity.mut_replace(Robot.drvREnc.getVelocity(), RotationsPerSecond));
+
+                log.motor("DrivetrainL")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            Robot.left1.get() * RobotController.getBatteryVoltage(), Volts))
+                    .angularPosition(m_angle.mut_replace(Robot.drvLEnc.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_velocity.mut_replace(Robot.drvLEnc.getVelocity(), RotationsPerSecond));
+              },
+              // Tell SysId to make generated commands require this subsystem, suffix test state in
+              // WPILog with this subsystem's name ("shooter")
+              this));
+  
+  
+  /**
+   * 
+   * @param level the level for what level you want the elevator to be
+   * @param currentHeight in rotations
+   * @return
+   */
+  public Command elevatorSetFancy() {
+    // Run shooter wheel at the desired speed using a PID controller and feedforward.
+    return run(() -> {
+      double shooterSpeed = InToRot(CalcDist(RobotConstants.level, RobotConstants.elevatorRotHeight))/0.75;
+          Robot.elevatorR.setVoltage(
+              m_shooterFeedback.calculate(Robot.elevatorEnc.getVelocity(), shooterSpeed)
+                  + m_shooterFeedforward.calculate(shooterSpeed));
+        })
+        .finallyDo(
+            () -> {
+              Robot.elevatorR.stopMotor();
+            })
+        .withName("elevatorSetFancy");
+  }
+
+    
 
 }

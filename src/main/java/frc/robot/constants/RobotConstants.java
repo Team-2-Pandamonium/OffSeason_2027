@@ -37,6 +37,7 @@ public class RobotConstants {
     public static boolean topEndstop;
     public static boolean bottEndstop;
     public static boolean PIDMode;
+    public static int level;
     // manipulator
     public static final double manMaxSPD=0.1;
     public static double manLeftOutput;

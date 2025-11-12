@@ -20,20 +20,43 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import edu.wpi.first.wpilibj.SPI.Port;
 
+import java.util.function.Consumer;
+
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 
 public class Robot extends TimedRobot {
   //motors
@@ -51,13 +74,18 @@ public class Robot extends TimedRobot {
   public static final RelativeEncoder drvLEnc = left1.getEncoder();
   public static final RelativeEncoder drvREnc = right1.getEncoder();
 
+  //sensors
+  public static final RelativeEncoder elevatorEnc = elevatorR.getEncoder();
+
+  //Feedforward
+  public static SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0);
+
+
+
 
   //PID
   public static final SparkClosedLoopController elevatorRPID=manRight.getClosedLoopController(); //left follows
 
-
-  //sensors
-  public static final RelativeEncoder elevatorEnc = elevatorR.getEncoder();
 
   public static final DigitalInput stg2Top = new DigitalInput(0);
   public static final DigitalInput CarrigeTop = new DigitalInput(1);
@@ -69,8 +97,8 @@ public class Robot extends TimedRobot {
   // camera
   public static final UsbCamera camera = CameraServer.startAutomaticCapture();
   // controllers
-  public static final PS5Controller DRIV_CONTROLLER = new PS5Controller(0);
-  public static final XboxController OPPERA_CONTROLLER = new XboxController(1);
+  public static final CommandPS5Controller DRIV_CONTROLLER = new CommandPS5Controller(0);
+  public static final CommandXboxController OPPERA_CONTROLLER = new CommandXboxController(1);
 
   // Timers :(
   public static final Timer drivModeTimer=new Timer();
@@ -93,7 +121,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-  
+
+    //SmartDashboard
+    SmartDashboard.updateValues();
+    SmartDashboard.setDefaultNumber("Elevator Encoder (rot)", elevatorEnc.getPosition());
+    SmartDashboard.setDefaultNumber("Navx Roll", gyro.getRoll());
+    SmartDashboard.setDefaultNumber("Navx Yaw", gyro.getYaw());
+    SmartDashboard.setDefaultNumber("Navx Pitch", gyro.getPitch());
+    SmartDashboard.setDefaultNumber("RPS of Left Motor", drvLEnc.getVelocity()*60);
+    SmartDashboard.setDefaultNumber("RPS of Right Motor", drvREnc.getVelocity()*60);
+
+
     //SparkMaxConfig
     SparkMaxConfig configR1 = new SparkMaxConfig();
     configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
@@ -186,6 +224,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+
     UpdatePeriodic.updateSensorValues();
     if (autonConst.strt) {
       // move 1 ft (12 in)
@@ -314,11 +353,12 @@ public class Robot extends TimedRobot {
 
 
     // ANY Elevator movment
+    // OPPERA_CONTROLLER.a().whileTrue(Elevator.elevatorSetFancy());
     if (RobotConstants.OpperaaButton) { // lvl1
       RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
           / (RobotConstants.elevatorMaxRot));
           RobotConstants.PIDMode = true;
-
+  
     } else if (RobotConstants.OpperayButton) { // lvl3
       RobotConstants.elevatorOutput = (Elevator.CalcDist(3, RobotConstants.elevatorRotHeight)
           / (RobotConstants.elevatorMaxRot));
