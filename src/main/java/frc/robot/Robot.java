@@ -388,7 +388,7 @@ public class Robot extends TimedRobot {
   
     // } else if (RobotConstants.OpperayButton) { // lvl3
     //   // RobotConstants.elevatorOutput = (Elevator.CalcDist(3, RobotConstants.elevatorRotHeight)
-    //   //     / (RobotConstants.elevatorMaxRot));
+    //   //     / (RobzotConstants.elevatorMaxRot));
     //   //     RobotConstants.PIDMode = true;
     //     new Elevator().elevatorSetFancy(3).schedule();
 
@@ -417,7 +417,7 @@ public class Robot extends TimedRobot {
         RobotConstants.elevatorOutput = 0.1;
       }
 
-    } else if (RobotConstants.OpperaDPadDown) {
+    } else if (RobotConstants.OpperaDPadDown || RobotConstants.OpperaleftBumper) {
 
       if (RobotConstants.elevatorRotHeight < .1) 
         {RobotConstants.elevatorOutput = -0.01;}
@@ -467,9 +467,23 @@ public class Robot extends TimedRobot {
       manLeft.set(.7);
       manRight.set(.5);
 
-    } else { // manual control
+    } else if (RobotConstants.OpperaaButton){
+      RobotConstants.spazMode = !RobotConstants.spazMode;
+      if (RobotConstants.spazMode) {
+        manLeft.set(1);
+        manRight.set(1);
+        RobotConstants.spazMode = false;
+      } else {
+        manLeft.set(-1);
+        manRight.set(-1);
+        RobotConstants.spazMode = true;
+      }
+    
+    } else {// manual control
       manLeft.set(Math.abs(RobotConstants.OpperaleftStick)*RobotConstants.OpperaleftStick);
       manRight.set(Math.abs(RobotConstants.OpperarightStick)*RobotConstants.OpperarightStick);
+      RobotConstants.spazMode = true;
+
 
     }
   
