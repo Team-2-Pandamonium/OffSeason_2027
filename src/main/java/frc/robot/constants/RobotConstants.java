@@ -20,11 +20,6 @@ public class RobotConstants {
     public static double left1Enc;
     public static double left2Enc;
 
-
-
-
-
-
     // elevator (all values in inches)
     public static final double kPoffset = 25;
     public static final double elevatorMaxHeight = 60;
@@ -34,9 +29,7 @@ public class RobotConstants {
     public static final double Level1 = 24 + 6;
     public static final double Level2 = 24 + 17 + 6;
     public static final double Level3 = 24 + (17 * 2) + 6;
-    public static final double maxHeightforSlowThreshold=72;
-    public static final double minHeightforSlowThreshold=3;
-    public static final double minHeightforDecelerationThreshold=5;
+    public static final double maxHgtSlowThrthHld=68;
     public static boolean carrigeTop;
     public static boolean stg2Top;
     public static boolean carrigeBot;
@@ -49,8 +42,6 @@ public class RobotConstants {
     public static final double manMaxSPD=0.1;
     public static double manLeftOutput = 0.5;
     public static double manRightOutput = 0.25;
-    public static boolean spazMode = false;
-
 
     // drive
     public static double rightOutput;
