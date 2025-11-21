@@ -35,81 +35,81 @@ public class UpdatePeriodic extends SubsystemBase {
      */
     public void updateControllerInputs() {
         // if any of these are below the deadzone, it equals zero. abs so the controller
-        // can go negative
-        //Driver sticks
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(1, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivleftStick, 0));
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(1, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivleftStick, Robot.DRIV_CONTROLLER.getLeftY()));
+    //     // can go negative
+    //     //Driver sticks
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(1, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivleftStick, 0));
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(1, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivleftStick, Robot.DRIV_CONTROLLER.getLeftY()));
 
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(2, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivrightStick, 0));
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(2, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivrightStick, Robot.DRIV_CONTROLLER.getRightY()));
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(2, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivrightStick, 0));
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(2, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivrightStick, Robot.DRIV_CONTROLLER.getRightY()));
 
-        //Driver triggers
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(3, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivleftTrigger, 0));
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(3, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivleftTrigger, Robot.DRIV_CONTROLLER.getL2Axis()));
+    //     //Driver triggers
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(3, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivleftTrigger, 0));
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(3, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivleftTrigger, Robot.DRIV_CONTROLLER.getL2Axis()));
 
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(4, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivrightTrigger, 0));
-        Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(4, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivrightTrigger, Robot.DRIV_CONTROLLER.getR2Axis()));
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(4, RobotConstants.Drivdeadzone).whileFalse(SetDouble(RobotConstants.DrivrightTrigger, 0));
+    //     Robot.DRIV_CONTROLLER.axisMagnitudeGreaterThan(4, RobotConstants.Drivdeadzone).whileTrue(SetDouble(RobotConstants.DrivrightTrigger, Robot.DRIV_CONTROLLER.getR2Axis()));
 
-        //driver bumpers
-        Robot.DRIV_CONTROLLER.L1().onTrue(SetBool(RobotConstants.DrivleftBumper, true));
-        Robot.DRIV_CONTROLLER.L1().onFalse(SetBool(RobotConstants.DrivleftBumper, false));
+    //     //driver bumpers
+    //     Robot.DRIV_CONTROLLER.L1().onTrue(SetBool(RobotConstants.DrivleftBumper, true));
+    //     Robot.DRIV_CONTROLLER.L1().onFalse(SetBool(RobotConstants.DrivleftBumper, false));
         
-        Robot.DRIV_CONTROLLER.R1().onTrue(SetBool(RobotConstants.DrivrightBumper, true));
-        Robot.DRIV_CONTROLLER.R1().onFalse(SetBool(RobotConstants.DrivrightBumper, false));
+    //     Robot.DRIV_CONTROLLER.R1().onTrue(SetBool(RobotConstants.DrivrightBumper, true));
+    //     Robot.DRIV_CONTROLLER.R1().onFalse(SetBool(RobotConstants.DrivrightBumper, false));
 
-        //operator triggers
-        Robot.OPPERA_CONTROLLER.leftTrigger(RobotConstants.Oppdeadzone).whileFalse(SetDouble(RobotConstants.OpperaleftTrigger, 0));
-        Robot.OPPERA_CONTROLLER.leftTrigger(RobotConstants.Oppdeadzone).whileTrue(SetDouble(RobotConstants.OpperaleftTrigger, RobotConstants.OpperaleftTrigger));
+    //     //operator triggers
+    //     Robot.OPPERA_CONTROLLER.leftTrigger(RobotConstants.Oppdeadzone).whileFalse(SetDouble(RobotConstants.OpperaleftTrigger, 0));
+    //     Robot.OPPERA_CONTROLLER.leftTrigger(RobotConstants.Oppdeadzone).whileTrue(SetDouble(RobotConstants.OpperaleftTrigger, RobotConstants.OpperaleftTrigger));
 
-        Robot.OPPERA_CONTROLLER.rightTrigger(RobotConstants.Oppdeadzone).whileFalse(SetDouble(RobotConstants.OpperarightTrigger, 0));
-        Robot.OPPERA_CONTROLLER.rightTrigger(RobotConstants.Oppdeadzone).whileTrue(SetDouble(RobotConstants.OpperarightTrigger, RobotConstants.OpperarightTrigger));
+    //     Robot.OPPERA_CONTROLLER.rightTrigger(RobotConstants.Oppdeadzone).whileFalse(SetDouble(RobotConstants.OpperarightTrigger, 0));
+    //     Robot.OPPERA_CONTROLLER.rightTrigger(RobotConstants.Oppdeadzone).whileTrue(SetDouble(RobotConstants.OpperarightTrigger, RobotConstants.OpperarightTrigger));
         
-        //operator bumpers
-        Robot.OPPERA_CONTROLLER.leftBumper().onTrue(SetBool(RobotConstants.OpperaleftBumper, true));
-        Robot.OPPERA_CONTROLLER.leftBumper().onFalse(SetBool(RobotConstants.OpperaleftBumper, false));
+    //     //operator bumpers
+    //     Robot.OPPERA_CONTROLLER.leftBumper().onTrue(SetBool(RobotConstants.OpperaleftBumper, true));
+    //     Robot.OPPERA_CONTROLLER.leftBumper().onFalse(SetBool(RobotConstants.OpperaleftBumper, false));
 
-        Robot.OPPERA_CONTROLLER.rightBumper().onTrue(SetBool(RobotConstants.OpperarightBumper, true));
-        Robot.OPPERA_CONTROLLER.rightBumper().onFalse(SetBool(RobotConstants.OpperarightBumper, false));
+    //     Robot.OPPERA_CONTROLLER.rightBumper().onTrue(SetBool(RobotConstants.OpperarightBumper, true));
+    //     Robot.OPPERA_CONTROLLER.rightBumper().onFalse(SetBool(RobotConstants.OpperarightBumper, false));
 
-        //buttons
-        Robot.OPPERA_CONTROLLER.b().onTrue(SetBool(RobotConstants.OpperabButton, true));
-        Robot.OPPERA_CONTROLLER.b().onFalse(SetBool(RobotConstants.OpperabButton, false));
+    //     //buttons
+    //     Robot.OPPERA_CONTROLLER.b().onTrue(SetBool(RobotConstants.OpperabButton, true));
+    //     Robot.OPPERA_CONTROLLER.b().onFalse(SetBool(RobotConstants.OpperabButton, false));
 
-        Robot.OPPERA_CONTROLLER.x().onTrue(SetBool(RobotConstants.OpperaxButton, true));
-        Robot.OPPERA_CONTROLLER.x().onFalse(SetBool(RobotConstants.OpperaxButton, false));
+    //     Robot.OPPERA_CONTROLLER.x().onTrue(SetBool(RobotConstants.OpperaxButton, true));
+    //     Robot.OPPERA_CONTROLLER.x().onFalse(SetBool(RobotConstants.OpperaxButton, false));
 
-        Robot.OPPERA_CONTROLLER.a().onTrue(SetBool(RobotConstants.OpperaaButton, true));
-        Robot.OPPERA_CONTROLLER.a().onFalse(SetBool(RobotConstants.OpperaaButton, false));
+    //     Robot.OPPERA_CONTROLLER.a().onTrue(SetBool(RobotConstants.OpperaaButton, true));
+    //     Robot.OPPERA_CONTROLLER.a().onFalse(SetBool(RobotConstants.OpperaaButton, false));
 
-        Robot.OPPERA_CONTROLLER.y().onTrue(SetBool(RobotConstants.OpperayButton, true));
-        Robot.OPPERA_CONTROLLER.y().onFalse(SetBool(RobotConstants.OpperayButton, false));
+    //     Robot.OPPERA_CONTROLLER.y().onTrue(SetBool(RobotConstants.OpperayButton, true));
+    //     Robot.OPPERA_CONTROLLER.y().onFalse(SetBool(RobotConstants.OpperayButton, false));
 
 
-        //dpad
-        Robot.OPPERA_CONTROLLER.povUp().onTrue(SetBool(RobotConstants.OpperaDPadUp, true));
-        Robot.OPPERA_CONTROLLER.povUp().onFalse(SetBool(RobotConstants.OpperaDPadUp, false));
+    //     //dpad
+    //     Robot.OPPERA_CONTROLLER.povUp().onTrue(SetBool(RobotConstants.OpperaDPadUp, true));
+    //     Robot.OPPERA_CONTROLLER.povUp().onFalse(SetBool(RobotConstants.OpperaDPadUp, false));
 
-        Robot.OPPERA_CONTROLLER.povUpRight().onTrue(SetBool(RobotConstants.OpperaDPadUpRight, true));
-        Robot.OPPERA_CONTROLLER.povUpRight().onFalse(SetBool(RobotConstants.OpperaDPadUpRight, false));
+    //     Robot.OPPERA_CONTROLLER.povUpRight().onTrue(SetBool(RobotConstants.OpperaDPadUpRight, true));
+    //     Robot.OPPERA_CONTROLLER.povUpRight().onFalse(SetBool(RobotConstants.OpperaDPadUpRight, false));
 
-        Robot.OPPERA_CONTROLLER.povRight().onTrue(SetBool(RobotConstants.OpperaDPadRight, true));
-        Robot.OPPERA_CONTROLLER.povRight().onFalse(SetBool(RobotConstants.OpperaDPadRight, false));
+    //     Robot.OPPERA_CONTROLLER.povRight().onTrue(SetBool(RobotConstants.OpperaDPadRight, true));
+    //     Robot.OPPERA_CONTROLLER.povRight().onFalse(SetBool(RobotConstants.OpperaDPadRight, false));
 
-        Robot.OPPERA_CONTROLLER.povDownRight().onTrue(SetBool(RobotConstants.OpperaDPadDownRight, true));
-        Robot.OPPERA_CONTROLLER.povDownRight().onFalse(SetBool(RobotConstants.OpperaDPadDownRight, false));
+    //     Robot.OPPERA_CONTROLLER.povDownRight().onTrue(SetBool(RobotConstants.OpperaDPadDownRight, true));
+    //     Robot.OPPERA_CONTROLLER.povDownRight().onFalse(SetBool(RobotConstants.OpperaDPadDownRight, false));
 
-        Robot.OPPERA_CONTROLLER.povLeft().onTrue(SetBool(RobotConstants.OpperaDPadLeft, true));
-        Robot.OPPERA_CONTROLLER.povLeft().onFalse(SetBool(RobotConstants.OpperaDPadLeft, false));
+    //     Robot.OPPERA_CONTROLLER.povLeft().onTrue(SetBool(RobotConstants.OpperaDPadLeft, true));
+    //     Robot.OPPERA_CONTROLLER.povLeft().onFalse(SetBool(RobotConstants.OpperaDPadLeft, false));
 
-        Robot.OPPERA_CONTROLLER.povUpLeft().onTrue(SetBool(RobotConstants.OpperaDPadUpLeft, true));
-        Robot.OPPERA_CONTROLLER.povUpLeft().onFalse(SetBool(RobotConstants.OpperaDPadUpLeft, false));
+    //     Robot.OPPERA_CONTROLLER.povUpLeft().onTrue(SetBool(RobotConstants.OpperaDPadUpLeft, true));
+    //     Robot.OPPERA_CONTROLLER.povUpLeft().onFalse(SetBool(RobotConstants.OpperaDPadUpLeft, false));
 
     }
 
     public void ABXYDpadUpdate() {
-        Robot.OPPERA_CONTROLLER.a().whileTrue(new Elevator().elevatorSetFancy(1));
-        Robot.OPPERA_CONTROLLER.y().whileTrue(new Elevator().elevatorSetFancy(3));
-        Robot.OPPERA_CONTROLLER.b().whileTrue(new Elevator().elevatorSetFancy(2));
+        // Robot.OPPERA_CONTROLLER.a().whileTrue(new Elevator().elevatorSetFancy(1));
+        // Robot.OPPERA_CONTROLLER.y().whileTrue(new Elevator().elevatorSetFancy(3));
+        // Robot.OPPERA_CONTROLLER.b().whileTrue(new Elevator().elevatorSetFancy(2));
     }
 
     public static void updateSensorValues() {

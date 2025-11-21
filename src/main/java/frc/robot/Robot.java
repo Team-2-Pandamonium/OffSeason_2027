@@ -106,8 +106,8 @@ public class Robot extends TimedRobot {
   // camera
   public static final UsbCamera camera = CameraServer.startAutomaticCapture();
   // controllers
-  public static final CommandPS5Controller DRIV_CONTROLLER = new CommandPS5Controller(0);
-  public static final CommandXboxController OPPERA_CONTROLLER = new CommandXboxController(1);
+  public static final PS5Controller DRIV_CONTROLLER = new PS5Controller(0);
+  public static final XboxController OPPERA_CONTROLLER = new XboxController(1);
 
   // Timers :(
   public static final Timer drivModeTimer=new Timer();
@@ -254,112 +254,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (autonConst.strt) {
-      // move 1 ft (12 in)
-      new Auton().intake().schedule();;
-      new Auton().goFwd(Auton.distToRot(156)).schedule();;
-      new WaitCommand(4).schedule();;
-      autonConst.movdStrt = true;
-    }
-
-
-    if (autonConst.movdStrt) {
-      autonConst.strt = false;
-      // turn to the shelf, 90 degrees
-      new Auton().turnLR("L").schedule();;
-      new WaitCommand(3).schedule();;
-      autonConst.trnd = true;
-      autonConst.movdStrt = false;
-    }
-
-    // go 12 in (1 ft) forwards
-    if (autonConst.trnd) {
-      new Auton().goFwd(Auton.distToRot(84)).schedule();;
-      new WaitCommand(4).schedule();;
-      autonConst.movToshelf = true;
-    }
-
-      // go to level 1 on elevator
-      if (autonConst.movToshelf) {
-        autonConst.trnd = false;
-        new Auton().goToSpecificElevatorLevel(1).schedule();;
-        new WaitCommand(2).schedule();;
-      }
-
-      // elevatorR.set(RobotConstants.elevatorOutput);
-
-      // if the elevator is at level 1, then go forward 3 inches, into the shelf
-      if (Math.abs(Elevator.CalcDist(1, RobotConstants.elevatorRotHeight) - elevatorEnc.getPosition()) <= 0.5) {
-        autonConst.movToshelf = false;
-        new Auton().goFwd(Auton.distToRot(3)).schedule();;
-        new WaitCommand(1).schedule();;
-        autonConst.push = true;
-      }
-
-      if (autonConst.push) {
-        // release the CUBEEE
-        autonConst.push = false;
-        new Auton().outake().schedule();;
-        new WaitCommand(1).schedule();;
-        autonConst.outTaked = true;
-      }
-
-      if (autonConst.outTaked) {
-        //move backwards 6 inches (0.5 ft)
-        autonConst.outTaked = false;
-        new Auton().goFwd(Auton.distToRot(-6)).schedule();;
-        new WaitCommand(1).schedule();;
-        autonConst.backedUp = true;
-      }
-      if (autonConst.backedUp) {
-        // elevator bottom
-        new Elevator().reset0(true).schedule();;
-      }
-
-      if (elevatorEnc.getPosition() == 0 && autonConst.backedUp) {
-        // final condition, checking if elevator at bottom and backedUp is true, then prints finished
-        autonConst.backedUp = false;
-        for (int i = -1; i < 67; i++) {
-          System.out.println("auton finished x"+Integer.toString(i));
-        }
-      }
-
-
-
-  }
-
-  /**
-   * This function is called once each time the robot enters teleoperated mode.
-   */
-  @Override
-  public void teleopInit() {
-    mode = "teleop";
-    // System.out.println("WARNING: RESETING ELEVATOR 0");
-    // Elevator.reset0(false);
-    // elevatorEnc.setPosition(0);
-    drivModeTimer.start();
-    drivModeTimer.reset();
-    //unpid the pid (right)
-    SparkMaxConfig configR1 = new SparkMaxConfig();
-    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
-    SparkMaxConfig configR2 = new SparkMaxConfig();
-    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1);
-    right1.configure(configR1, null, null);
-    right2.configure(configR2, null, null);
-
-    //unpid the pid (left)
-    SparkMaxConfig configL1 = new SparkMaxConfig();
-    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
-    SparkMaxConfig configL2 = new SparkMaxConfig();
-    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1);
-    left1.configure(configL1, null, null);
-    left2.configure(configL2, null, null);
-
-
-    //acceleration for Drivbase
-
-    RobotConstants.leftOutput = 0;
-    RobotConstants.rightOutput = 0;
 
   }
   
@@ -378,28 +272,8 @@ public class Robot extends TimedRobot {
       elevatorEnc.setPosition(0);
       // System.out.println("At bottom, reseting ENC zero");
     }    
-
-    // ANY Elevator movment
-    // OPPERA_CONTROLLER.a().whileTrue(Elevator.elevatorSetFancy());
-    // if (RobotConstants.OpperaaButton) { // lvl1
-    //   // RobotConstants.elevatorOutput = (Elevator.CalcDist(1, RobotConstants.elevatorRotHeight)
-    //   //     / (RobotConstants.elevatorMaxRot));
-    //     new Elevator().elevatorSetFancy(1).schedule();
-  
-    // } else if (RobotConstants.OpperayButton) { // lvl3
-    //   // RobotConstants.elevatorOutput = (Elevator.CalcDist(3, RobotConstants.elevatorRotHeight)
-    //   //     / (RobzotConstants.elevatorMaxRot));
-    //   //     RobotConstants.PIDMode = true;
-    //     new Elevator().elevatorSetFancy(3).schedule();
-
-    // } else if (RobotConstants.OpperaxButton) { // lvl2
-    //   // RobotConstants.elevatorOutput = (Elevator.CalcDist(2, RobotConstants.elevatorRotHeight)
-    //   //     / (RobotConstants.elevatorMaxRot));
-    //   //     RobotConstants.PIDMode = true;
-    //     new Elevator().elevatorSetFancy(2).schedule();
-
     // } else 
-    if (RobotConstants.OpperaDPadUp) { // DPAD movment (manual)
+    if (OPPERA_CONTROLLER.getPOV() == 0 ) { // DPAD movment (manual)
 
       if (RobotConstants.elevatorRotHeight > RobotConstants.maxHeightforSlowThreshold) { //at top
         RobotConstants.elevatorOutput = (0.1);
@@ -408,16 +282,9 @@ public class Robot extends TimedRobot {
     } else {
         RobotConstants.elevatorOutput = (.6);
       }
+    
 
-    } else if (RobotConstants.OpperaDPadUpRight) {
-
-      if (RobotConstants.elevatorRotHeight > RobotConstants.maxHeightforSlowThreshold) {
-        RobotConstants.elevatorOutput = 0.05;
-      } else {
-        RobotConstants.elevatorOutput = 0.1;
-      }
-
-    } else if (RobotConstants.OpperaDPadDown || RobotConstants.OpperaleftBumper) {
+    } else if (OPPERA_CONTROLLER.getPOV() == 180 || OPPERA_CONTROLLER.getLeftBumperButton()) {
 
       if (RobotConstants.elevatorRotHeight < .1) 
         {RobotConstants.elevatorOutput = -0.01;}
@@ -431,68 +298,52 @@ public class Robot extends TimedRobot {
       RobotConstants.elevatorOutput = 0.03;
     }
 
-    // digital stops
-    if ((RobotConstants.OpperaDPadUp || RobotConstants.OpperaDPadUpRight) && RobotConstants.topEndstop == true) {
-      RobotConstants.elevatorOutput = 0;
-      System.err.println("ERROR: TRYING TO OVER EXTEND ELEVATOR, setting elevator speed to 0");
+    // // digital stops
+    // if ((RobotConstants.OpperaDPadUp || RobotConstants.OpperaDPadUpRight) && RobotConstants.topEndstop == true) {
+    //   RobotConstants.elevatorOutput = 0;
+    //   System.err.println("ERROR: TRYING TO OVER EXTEND ELEVATOR, setting elevator speed to 0");
 
 
-    } else if ((RobotConstants.OpperaDPadDown)
-        && RobotConstants.bottEndstop == true) {
-      RobotConstants.elevatorOutput = 0;
-      System.err.println("ERROR: TRYING TO UNDER EXTEND ELEVATOR, setting elevator speed to 0");
+    // } else if ((RobotConstants.OpperaDPadDown)
+    //     && RobotConstants.bottEndstop == true) {
+    //   RobotConstants.elevatorOutput = 0;
+    //   System.err.println("ERROR: TRYING TO UNDER EXTEND ELEVATOR, setting elevator speed to 0");
 
-    }
+    // }
 
 
     elevatorR.set(RobotConstants.elevatorOutput); // one of the only times the elevator speed actually gets set in the code
 
 
     // MANIPULATOR   
-    if (RobotConstants.OpperarightTrigger > 0) { // intake
+    if (OPPERA_CONTROLLER.getRightTriggerAxis() > 0) { // intake
       // manLeftPID.setReference(-RobotConstants.manLeftOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
       // manRightPID.setReference(-RobotConstants.manRightOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
-      manLeft.set(RobotConstants.OpperarightTrigger*RobotConstants.manMaxSPD*3);
-      manRight.set(RobotConstants.OpperarightTrigger*RobotConstants.manMaxSPD);
+      manLeft.set(OPPERA_CONTROLLER.getRightTriggerAxis() *RobotConstants.manMaxSPD);
+      manRight.set(OPPERA_CONTROLLER.getRightTriggerAxis()*RobotConstants.manMaxSPD);
 
-    } else if (RobotConstants.OpperaleftTrigger > 0) { // outtake
+    } else if (OPPERA_CONTROLLER.getLeftTriggerAxis() > 0) {
       // manLeftPID.setReference(RobotConstants.manLeftOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
       // manRightPID.setReference(RobotConstants.manRightOutput*RobotConstants.manMaxSPD,ControlType.kVelocity);
-      manLeft.set(-RobotConstants.OpperaleftTrigger*RobotConstants.manMaxSPD*3);
-      manRight.set(-RobotConstants.OpperaleftTrigger*RobotConstants.manMaxSPD);
+      manLeft.set(-OPPERA_CONTROLLER.getLeftTriggerAxis()*RobotConstants.manMaxSPD);
+      manRight.set(-OPPERA_CONTROLLER.getLeftTriggerAxis()*RobotConstants.manMaxSPD);
 
     } else if (RobotConstants.OpperabButton) {
       // manLeftPID.setReference(-(RobotConstants.manLeftOutput/2)*RobotConstants.manMaxSPD,ControlType.kVelocity);
       // manRightPID.setReference(-(RobotConstants.manRightOutput/2)*RobotConstants.manMaxSPD,ControlType.kVelocity);
       manLeft.set(.7);
-      manRight.set(.5);
+      manRight.set(.7);
 
-    } else if (RobotConstants.OpperaaButton){
-      RobotConstants.spazMode = !RobotConstants.spazMode;
-      if (RobotConstants.spazMode) {
-        manLeft.set(1);
-        manRight.set(1);
-        RobotConstants.spazMode = false;
-      } else {
-        manLeft.set(-1);
-        manRight.set(-1);
-        RobotConstants.spazMode = true;
-      }
-    
     } else {// manual control
-      manLeft.set(Math.abs(RobotConstants.OpperaleftStick)*RobotConstants.OpperaleftStick);
-      manRight.set(Math.abs(RobotConstants.OpperarightStick)*RobotConstants.OpperarightStick);
+      manLeft.set(Math.abs(OPPERA_CONTROLLER.getLeftY())*OPPERA_CONTROLLER.getLeftY());
+      manRight.set(Math.abs(OPPERA_CONTROLLER.getRightY())*OPPERA_CONTROLLER.getRightY());
       RobotConstants.spazMode = true;
-
-
     }
   
     // DRIVE
 
-    
-   
-    RobotConstants.slowMode ^= RobotConstants.DrivleftBumper;
-    RobotConstants.turboMode ^= RobotConstants.DrivrightBumper;
+    RobotConstants.slowMode ^= DRIV_CONTROLLER.getL1Button();
+    RobotConstants.turboMode ^= DRIV_CONTROLLER.getL2Button();
 
 
     if (RobotConstants.slowMode && RobotConstants.turboMode) { // if both pressed, make it neither
@@ -509,34 +360,33 @@ public class Robot extends TimedRobot {
     }
 
 
-    if (RobotConstants.DrivleftStick > 0 && RobotConstants.DrivrightStick > 0) { // if backwards make slow mode slower
+    if (DRIV_CONTROLLER.getLeftY() > 0 && DRIV_CONTROLLER.getRightY() > 0) { // if backwards make slow mode slower
       RobotConstants.turboMode = false;
       RobotConstants.slowModeMaxSpeed = 0.1;
     } else {
       RobotConstants.slowModeMaxSpeed = 0.125;
     }
 
-    if (RobotConstants.DrivleftTrigger > .05) {
-      RobotConstants.leftOutput = RobotConstants.DrivleftTrigger*RobotConstants.DrivleftTrigger;
-      RobotConstants.rightOutput = RobotConstants.DrivleftTrigger*RobotConstants.DrivleftTrigger;
+  
+
+    if (DRIV_CONTROLLER.getL2Axis() > .05) {
+      RobotConstants.leftOutput = DRIV_CONTROLLER.getL2Axis()*DRIV_CONTROLLER.getL2Axis()+.01;
+      RobotConstants.rightOutput = DRIV_CONTROLLER.getL2Axis()*DRIV_CONTROLLER.getL2Axis()+.01;
       //System.out.println("going from left trigger");
 
-    } else if (RobotConstants.DrivrightTrigger > .05) {
-      RobotConstants.leftOutput = -RobotConstants.DrivrightTrigger*RobotConstants.DrivrightTrigger;
-      RobotConstants.rightOutput = -RobotConstants.DrivrightTrigger*RobotConstants.DrivrightTrigger;
+    } else if (DRIV_CONTROLLER.getR2Axis() > .05) {
+      RobotConstants.leftOutput = -DRIV_CONTROLLER.getR2Axis()*DRIV_CONTROLLER.getR2Axis()+.01;
+      RobotConstants.rightOutput = -DRIV_CONTROLLER.getR2Axis()*DRIV_CONTROLLER.getR2Axis()+.01;
       //System.out.println("going from right trigger");
 
-    } else if ((RobotConstants.DrivrightStick > .75 && RobotConstants.DrivleftStick < -.75) || (RobotConstants.DrivrightStick < -.75 && RobotConstants.DrivleftStick > .75)) {
-    RobotConstants.rightOutput = RobotConstants.DrivrightStick * 2;
-    RobotConstants.leftOutput = RobotConstants.DrivleftStick * 2;
-    RobotConstants.robotAccMaxSpeed = 1;
-
     } else {
-      RobotConstants.leftOutput = Math.abs(RobotConstants.DrivleftStick) * RobotConstants.DrivleftStick;
-      RobotConstants.rightOutput = Math.abs(RobotConstants.DrivrightStick) * RobotConstants.DrivrightStick;
+      RobotConstants.leftOutput = Math.abs(DRIV_CONTROLLER.getLeftY()) * DRIV_CONTROLLER.getLeftY();
+      RobotConstants.rightOutput = Math.abs(DRIV_CONTROLLER.getRightY()) * DRIV_CONTROLLER.getRightY();
 
       //System.out.println("going from normal controls");
     }
+
+
     //ANTI-TIP
     // if (gyro.getPitch() > 25) {
     //   left1.set(.75);
@@ -552,8 +402,8 @@ public class Robot extends TimedRobot {
 
 
 
-    left1.set(filter.calculate(RobotConstants.leftOutput * RobotConstants.robotAccMaxSpeed));
-    right1.set(filter.calculate(RobotConstants.rightOutput * RobotConstants.robotAccMaxSpeed));
+    left1.set(RobotConstants.leftOutput * RobotConstants.robotAccMaxSpeed);
+    right1.set(RobotConstants.rightOutput * RobotConstants.robotAccMaxSpeed);
 
 
   }

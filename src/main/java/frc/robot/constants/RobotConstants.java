@@ -35,8 +35,8 @@ public class RobotConstants {
     public static final double Level2 = 24 + 17 + 6;
     public static final double Level3 = 24 + (17 * 2) + 6;
     public static final double maxHeightforSlowThreshold=72;
-    public static final double minHeightforSlowThreshold=3;
-    public static final double minHeightforDecelerationThreshold=5;
+    public static final double minHeightforSlowThreshold=4;
+    public static final double minHeightforDecelerationThreshold=4;
     public static boolean carrigeTop;
     public static boolean stg2Top;
     public static boolean carrigeBot;
@@ -46,7 +46,7 @@ public class RobotConstants {
     public static boolean PIDMode;
     public static int level;
     // manipulator
-    public static final double manMaxSPD=0.1;
+    public static final double manMaxSPD=0.3;
     public static double manLeftOutput = 0.5;
     public static double manRightOutput = 0.25;
     public static boolean spazMode = false;
