@@ -138,6 +138,59 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+
+    //CANrange
+
+    //SmartDashboard
+    SmartDashboard.updateValues();
+    SmartDashboard.setDefaultNumber("Elevator Encoder (rot)", elevatorEnc.getPosition());
+    SmartDashboard.setDefaultNumber("Navx Roll", gyro.getRoll());
+    SmartDashboard.setDefaultNumber("Navx Yaw", gyro.getYaw());
+    SmartDashboard.setDefaultNumber("Navx Pitch", gyro.getPitch());
+    SmartDashboard.setDefaultNumber("RPS of Left Motor", drvLEnc.getVelocity()*60);
+    SmartDashboard.setDefaultNumber("RPS of Right Motor", drvREnc.getVelocity()*60);
+
+
+    //SparkMaxConfig
+    SparkMaxConfig configR1 = new SparkMaxConfig();
+    configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
+    SparkMaxConfig configR2 = new SparkMaxConfig();
+    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1);
+    right1.configure(configR1, null, null);
+    right2.configure(configR2, null, null);
+
+    SparkMaxConfig configL1 = new SparkMaxConfig();
+    configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
+    SparkMaxConfig configL2 = new SparkMaxConfig();
+    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1);
+    left1.configure(configL1, null, null);
+    left2.configure(configL2, null, null);
+
+    //ELEVATOR
+    SparkMaxConfig configEleR = new SparkMaxConfig();
+    configEleR.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false).closedLoop
+    .pid(PIDVar.elevatorP,
+        PIDVar.elevatorI,
+        PIDVar.elevatorD,
+        ClosedLoopSlot.kSlot0);
+    SparkMaxConfig configEleL = new SparkMaxConfig();
+    configEleL.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(elevatorR, true).closedLoop
+    .pid(PIDVar.elevatorP,
+        PIDVar.elevatorI,
+        PIDVar.elevatorD,
+        ClosedLoopSlot.kSlot0);
+    elevatorR.configure(configEleR, null, null);
+    elevatorL.configure(configEleL, null, null);
+
+    //MANIPULATOR
+    SparkMaxConfig configManRight = new SparkMaxConfig();
+    configManRight.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
+
+    SparkMaxConfig configManLeft = new SparkMaxConfig();
+    configManLeft.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
+    manRight.configure(configManRight, null, null);
+    manLeft.configure(configManLeft, null, null);
+
   }
 
   public void robotPeriodic() {
@@ -146,6 +199,7 @@ public class Robot extends TimedRobot {
   /** This function is run once each time the robot enters autonomous mode. */
   @Override
   public void autonomousInit() {
+    
   }
 
   /** This function is called periodically during autonomous. */
