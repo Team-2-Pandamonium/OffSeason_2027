@@ -1,4 +1,5 @@
 package frc.robot;
+// this is mecanum code
 
 import frc.robot.commands.UpdatePeriodic;
 import frc.robot.commands.Auton;
@@ -22,6 +23,12 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
@@ -75,10 +82,11 @@ public class Robot extends TimedRobot {
   public static SparkMax left1 = new SparkMax(13, MotorType.kBrushless);
   public static SparkMax left2 = new SparkMax(14, MotorType.kBrushless);
 
-
   //PID encoders
-  public static final RelativeEncoder drvLEnc = left1.getEncoder();
-  public static final RelativeEncoder drvREnc = right1.getEncoder();
+  public static final RelativeEncoder drvL1Enc = left1.getEncoder();
+  public static final RelativeEncoder drvL2Enc = left2.getEncoder();
+  public static final RelativeEncoder drvR1Enc = right1.getEncoder();
+  public static final RelativeEncoder drvR2Enc = right2.getEncoder();
 
   //sensors
   public static final RelativeEncoder elevatorEnc = elevatorR.getEncoder();
@@ -147,22 +155,20 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultNumber("Navx Roll", gyro.getRoll());
     SmartDashboard.setDefaultNumber("Navx Yaw", gyro.getYaw());
     SmartDashboard.setDefaultNumber("Navx Pitch", gyro.getPitch());
-    SmartDashboard.setDefaultNumber("RPS of Left Motor", drvLEnc.getVelocity()*60);
-    SmartDashboard.setDefaultNumber("RPS of Right Motor", drvREnc.getVelocity()*60);
 
 
     //SparkMaxConfig
     SparkMaxConfig configR1 = new SparkMaxConfig();
     configR1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(false);
     SparkMaxConfig configR2 = new SparkMaxConfig();
-    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).follow(right1);
+    configR2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(false).disableFollowerMode();
     right1.configure(configR1, null, null);
     right2.configure(configR2, null, null);
 
     SparkMaxConfig configL1 = new SparkMaxConfig();
     configL1.idleMode(IdleMode.kBrake).smartCurrentLimit(40).disableFollowerMode().inverted(true);
     SparkMaxConfig configL2 = new SparkMaxConfig();
-    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).follow(left1);
+    configL2.idleMode(IdleMode.kBrake).smartCurrentLimit(40).inverted(true).disableFollowerMode();
     left1.configure(configL1, null, null);
     left2.configure(configL2, null, null);
 
@@ -205,7 +211,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
+    double x = 0; // desired x
+    double y = 0; // desired y
+    Auton.FinalCommandToRunConstantly(x, y);
   }
   
   /** This function is called periodically during teleoperated mode. */
