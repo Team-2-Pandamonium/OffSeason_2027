@@ -211,9 +211,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    double x = 0; // desired x
-    double y = 0; // desired y
-    Auton.FinalCommandToRunConstantly(x, y);
   }
   
   /** This function is called periodically during teleoperated mode. */
